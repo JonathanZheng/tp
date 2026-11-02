@@ -169,5 +169,8 @@ public class NameContainsKeywordsPredicateTest {
 
         // EP: later component of a hyphenated name
         assertTrue(new NameContainsKeywordsPredicate(List.of("Jane")).test(person));
+        // EP: complete hyphenated name remains searchable
+        assertTrue(new NameContainsKeywordsPredicate(List.of("Mary-Jane")).test(person));
+        assertTrue(new NameContainsKeywordsPredicate(List.of("Mary-J")).test(person));
     }
 }
