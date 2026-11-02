@@ -5,6 +5,8 @@ title: User Guide
 
 InsureConnect is a **desktop application for managing contacts, optimized for use through a Command Line Interface (CLI)** while retaining the benefits of a Graphical User Interface (GUI). If you type quickly, InsureConnect can help you manage contacts faster than traditional GUI applications.
 
+InsureConnect stores customer contact details and associated policy numbers. You can use a policy number to find its customer record. It does not store policy coverage, premiums, renewal dates or policy status; consult your insurer's records for these details. Remarks belong to the customer record, not to an individual policy.
+
 * Table of Contents
 {:toc}
 

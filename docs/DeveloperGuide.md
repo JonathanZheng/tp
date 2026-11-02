@@ -193,18 +193,26 @@ This section describes some noteworthy details on how certain features are imple
 * is an insurance agent (or financial adviser) based in Singapore
 * manages a large portfolio of customers (up to about 1000), each holding one or more insurance policies
 * handles many policies, claims, renewals and follow-ups daily
-* needs to pull up a customer's contact details and policies quickly, for example while the customer is on the line
+* needs to pull up a customer's contact details and policy numbers quickly, for example while the customer is on the line
 * finds it hard to remember customers' policy numbers, but remembers their names
 * does most of their administrative work on a laptop or desktop computer
 * can type fast and prefers typing to mouse interactions
 * is reasonably comfortable using CLI apps
 
-**Value proposition**: InsureConnect gives an insurance agent fast access to customer contact and policy details through typed commands, so that a customer can be found by name instead of by a policy number that is hard to remember. It is faster than a spreadsheet or a mouse-driven CRM, keeps all data on the agent's own computer and works without an internet connection.
+**Value proposition**: InsureConnect gives an insurance agent fast access to customer contact details and associated policy numbers through typed commands, so that a customer can be found by name instead of by a policy number that is hard to remember. It is faster than a spreadsheet or a mouse-driven CRM, keeps all data on the agent's own computer and works without an internet connection.
+
+**Policy scope**: Policy numbers are identifiers attached to customer records. Searching by policy number retrieves matching customer records. InsureConnect does not store policy coverage, premiums, renewal dates or policy status, and remarks apply to a customer rather than an individual policy.
 
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
+
+This table records user needs, including future work; a priority does not indicate implementation status.
+
+For policy-related stories, US06 and US07 support customer lookup by policy number and viewing a customer's policy numbers only. US25 supports deleting customer records; policy numbers can be removed by editing a customer, provided at least one remains.
+
+Detailed policy information (US08), policy renewal and status features (US16-US18), navigation to separate policy records (US22), and the task and renewal overview (US28) are future work and are not implemented.
 
 | Priority | Story | As an …​                          | I want to …​                                                | So that I can…​                                              |
 |--------|-------|-----------------------------------|-------------------------------------------------------------|--------------------------------------------------------------|
@@ -213,8 +221,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *` | US03  | insurance agent (regular user)    | search for a customer by name                               | quickly find the customer's record                           |
 | `* *`  | US04  | insurance agent (beginner user)   | search for a customer by customer ID                        | retrieve the correct record efficiently                      |
 | `* *`  | US05  | insurance agent (beginner user)   | search for a customer by phone number                       | identify the customer using information they provide         |
-| `* *`  | US06  | insurance agent (beginner user)   | search for a policy by policy number                        | immediately retrieve its details                             |
-| `* *`  | US07  | insurance agent (beginner user)   | view all policies belonging to a customer                   | understand the customer's insurance coverage                 |
+| `* *`  | US06  | insurance agent (beginner user)   | search for a customer by policy number                      | retrieve the associated customer record                      |
+| `* *`  | US07  | insurance agent (beginner user)   | view all policy numbers belonging to a customer             | identify the customer's policies                             |
 | `* *`  | US08  | insurance agent (beginner user)   | view detailed information about a policy                    | answer customer enquiries                                    |
 | `* *`  | US09  | insurance agent (beginner user)   | add notes to a customer record                              | keep track of previous interactions                          |
 | `* *`  | US10  | insurance agent (beginner user)   | update customer contact information                         | keep records accurate                                        |
