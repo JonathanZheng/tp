@@ -10,6 +10,12 @@ title: Developer Guide
 ## **Acknowledgements**
 
 * This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
+* The offline User Guide generator uses [Python-Markdown 3.7](https://python-markdown.github.io/) to convert Markdown to HTML. It is a documentation-generation dependency and is not required at application runtime.
+
+Notable uses of AI:
+
+* OpenAI Codex and Claude Code were used to assist with implementation, tests, debugging and documentation.
+* @JonathanZheng used OpenAI Codex for preliminary PR reviews and to implement and test the offline User Guide.
 
 --------------------------------------------------------------------------------------------------------------------
 
