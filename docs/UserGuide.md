@@ -129,7 +129,7 @@ preserves your command text, output, and selected contact.
   * **Warning:** A single `!` before any character is treated as an escape marker and removed. For example, `r/Great! Thanks` is saved as `Great Thanks`.
   * **Note:** `!` is treated as an escape character only in the name (`n/`), address (`a/`), and remark (`r/`) fields. Other fields (such as `e/` email) do not use `!` as an escape character. Their own validation rules still apply; for example, email addresses containing `!` are not accepted.
 
-* Extraneous parameters for commands that take no parameters, such as `help`, `exit`, `clear`, and `userguide`, are ignored.<br>
+* Extraneous parameters for commands that take no parameters, such as `help`, `exit`, `clear`, `userguide`, and `ug`, are ignored.<br>
   For example, `help 123` is interpreted as `help`.
 
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
@@ -150,7 +150,7 @@ These rules apply when adding a customer or changing a field with `edit`:
 
 ### Viewing help: `help`
 
-Opens the Help window. It lists the formats for `add`, `edit`, `delete`, `find`, `list`, `resize`, `clear`, `help`, `userguide`, and `exit`.
+Opens the Help window. It lists the formats for `add`, `edit`, `delete`, `find`, `list`, `resize`, `clear`, `help`, `userguide` (`ug`), and `exit`.
 The window also shows a link to this User Guide; click **Copy URL** to copy the link to your clipboard.
 
 You can open the same window from the **Help** menu or by pressing **F1**.
@@ -163,9 +163,9 @@ Format: `help`
 
 ### Opening the User Guide: `userguide`
 
-Opens the online User Guide in your default web browser.
+Opens the online User Guide in your default web browser. For faster command-line use, `ug` can be used as a short form of `userguide`.
 
-Format: `userguide`
+Format: `userguide` or `ug`
 
 ### Adding a person: `add`
 
@@ -396,4 +396,4 @@ Action | Format, Examples
 **List** | `list [n/|c/]`<br> e.g., `list n/`, `list c/`
 **Resize** | `resize p/min\|p/med\|p/max` or `resize s/WIDTH HEIGHT`<br> e.g., `resize p/med`, `resize s/1000 700`
 **Help** | `help`
-**User Guide** | `userguide`
+**User Guide** | `userguide` or `ug`

@@ -63,7 +63,7 @@ public class InsureConnectParser {
             case ResizeCommand.COMMAND_WORD -> new ResizeCommandParser().parse(arguments);
             case ExitCommand.COMMAND_WORD -> new ExitCommand();
             case HelpCommand.COMMAND_WORD -> new HelpCommand();
-            case UserGuideCommand.COMMAND_WORD -> new UserGuideCommand();
+            case UserGuideCommand.COMMAND_WORD, UserGuideCommand.COMMAND_ALIAS -> new UserGuideCommand();
             default -> {
                 logger.finer("This user input caused a ParseException: " + userInput);
                 throw new ParseException(MESSAGE_UNKNOWN_COMMAND);
