@@ -11,6 +11,10 @@ title: Developer Guide
 
 * This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
 
+Notable uses of AI:
+* OpenAI Codex was used to explain the codebase and assist with drafting, reviewing, and testing implementation changes. All AI-assisted suggestions were reviewed, adapted, and tested by the team.
+* @denzelgoo used OpenAI Codex to assist with idea generation, as well as planning and drafting implementation changes. OpenAI Codex was also used to review the accuracy of documentation against the actual implementation and behaviours of the application.
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## **Setting up, getting started**
