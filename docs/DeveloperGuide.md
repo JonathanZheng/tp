@@ -10,6 +10,15 @@ title: Developer Guide
 ## **Acknowledgements**
 
 * This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
+* The offline User Guide generator uses [Python-Markdown 3.7](https://python-markdown.github.io/) to convert Markdown to HTML. It is a documentation-generation dependency and is not required at application runtime.
+
+Notable uses of AI:
+
+* OpenAI Codex and Claude Code were used to assist with implementation, tests, debugging and documentation.
+* All AI-generated output was reviewed and appropriately adapted before use.
+* @JonathanZheng used OpenAI Codex for preliminary PR reviews and to implement and test the offline User Guide.
+* @BenjaminWong33 used OpenAI Codex to explain the codebase, generate ideas, assist with debugging and testing, and suggest implementation approaches.
+* @denzelgoo used OpenAI Codex to assist with idea generation, as well as planning and drafting implementation changes. OpenAI Codex was also used to review the accuracy of documentation against the actual implementation and behaviours of the application.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -100,7 +109,7 @@ Here's a (partial) class diagram of the `Logic` component:
 
 <img src="images/LogicClassDiagram.png" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` followed by `execute("confirm")` API calls as an example.
+The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` followed by a confirmation response such as `execute("y")` as an example.
 
 ![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
 
@@ -110,10 +119,10 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, the command is passed to an `InsureConnectParser` object, which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
+2. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
+3. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
    Note that although this is shown as a single step in the diagram above for simplicity, the code can require several interactions between the command object and the `Model` to complete the operation.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned from `Logic`.
+4. The result of the command execution is encapsulated as a `CommandResult` object which is returned from `Logic`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
@@ -193,18 +202,26 @@ This section describes some noteworthy details on how certain features are imple
 * is an insurance agent (or financial adviser) based in Singapore
 * manages a large portfolio of customers (up to about 1000), each holding one or more insurance policies
 * handles many policies, claims, renewals and follow-ups daily
-* needs to pull up a customer's contact details and policies quickly, for example while the customer is on the line
+* needs to pull up a customer's contact details and policy numbers quickly, for example while the customer is on the line
 * finds it hard to remember customers' policy numbers, but remembers their names
 * does most of their administrative work on a laptop or desktop computer
 * can type fast and prefers typing to mouse interactions
 * is reasonably comfortable using CLI apps
 
-**Value proposition**: InsureConnect gives an insurance agent fast access to customer contact and policy details through typed commands, so that a customer can be found by name instead of by a policy number that is hard to remember. It is faster than a spreadsheet or a mouse-driven CRM, keeps all data on the agent's own computer and works without an internet connection.
+**Value proposition**: InsureConnect gives an insurance agent fast access to customer contact details and associated policy numbers through typed commands, so that a customer can be found by name instead of by a policy number that is hard to remember. It is faster than a spreadsheet or a mouse-driven CRM, keeps all data on the agent's own computer and works without an internet connection.
+
+**Policy scope**: Policy numbers are identifiers attached to customer records. Searching by policy number retrieves matching customer records. InsureConnect does not store policy coverage, premiums, renewal dates or policy status, and remarks apply to a customer rather than an individual policy.
 
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
+
+This table records user needs, including future work; a priority does not indicate implementation status.
+
+For policy-related stories, US06 and US07 support customer lookup by policy number and viewing a customer's policy numbers only. US25 supports deleting customer records; policy numbers can be removed by editing a customer, provided at least one remains.
+
+Detailed policy information (US08), policy renewal and status features (US16-US18), navigation to separate policy records (US22), and the task and renewal overview (US28) are future work and are not implemented.
 
 | Priority | Story | As an …​                          | I want to …​                                                | So that I can…​                                              |
 |--------|-------|-----------------------------------|-------------------------------------------------------------|--------------------------------------------------------------|
@@ -213,8 +230,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *` | US03  | insurance agent (regular user)    | search for a customer by name                               | quickly find the customer's record                           |
 | `* *`  | US04  | insurance agent (beginner user)   | search for a customer by customer ID                        | retrieve the correct record efficiently                      |
 | `* *`  | US05  | insurance agent (beginner user)   | search for a customer by phone number                       | identify the customer using information they provide         |
-| `* *`  | US06  | insurance agent (beginner user)   | search for a policy by policy number                        | immediately retrieve its details                             |
-| `* *`  | US07  | insurance agent (beginner user)   | view all policies belonging to a customer                   | understand the customer's insurance coverage                 |
+| `* *`  | US06  | insurance agent (beginner user)   | search for a customer by policy number                      | retrieve the associated customer record                      |
+| `* *`  | US07  | insurance agent (beginner user)   | view all policy numbers belonging to a customer             | identify the customer's policies                             |
 | `* *`  | US08  | insurance agent (beginner user)   | view detailed information about a policy                    | answer customer enquiries                                    |
 | `* *`  | US09  | insurance agent (beginner user)   | add notes to a customer record                              | keep track of previous interactions                          |
 | `* *`  | US10  | insurance agent (beginner user)   | update customer contact information                         | keep records accurate                                        |
@@ -410,7 +427,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Agent**: An insurance agent or financial adviser who sells insurance policies and uses InsureConnect to manage their customers
 * **Customer**: A person whose details are recorded in InsureConnect, who holds at least one insurance policy sold by the agent
 * **Policy**: An insurance contract held by a customer, such as a life, health, motor or travel insurance plan
-* **Policy number**: The unique code that identifies a policy, made up of 1 to 30 letters and digits (e.g. `LIFE20481`). Every customer has at least one, and no two customers can share the same policy number. Entered with the `t/` prefix
+* **Policy number**: The unique code that identifies a policy, made up of 1 to 30 characters with at least one letter or digit; hyphens and slashes are also allowed (e.g. `LIFE-2026/SG`). Every customer has at least one, and no two customers can share the same policy number. Entered with the `t/` prefix
 * **Remark**: An optional free text note attached to a customer, used for follow-ups and preferences (e.g. `Prefers WhatsApp after 6pm`). The `r/` prefix sets it, and `edit INDEX r/` clears it. An omitted remark is stored as an empty string when adding a customer
 * **Duplicate customer**: A customer whose name and phone number match those of an existing customer. Name matching ignores case and extra spaces. Phone matching ignores a leading `+`; for Singapore numbers, the `65` country code is also ignored when comparing it with an 8-digit local number
 * **Prefix matching**: The way `find` compares keywords with names: a keyword matches a name if any word in the name starts with the keyword, ignoring case (e.g. `wei` matches `Tan Wei Ming`, but `ei` does not)
@@ -424,86 +441,93 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ## **Appendix: Instructions for manual testing**
 
-Given below are instructions to test the app manually.
+The walkthrough below exercises the main features together. It complements the [User Guide](UserGuide.md), which describes command formats and field constraints in detail. Continue with exploratory testing after completing the path.
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** These instructions only provide a starting point for testers to work on;
-testers are expected to do more *exploratory* testing.
+### Prepare an isolated working folder
 
-</div>
+1. Create a new, empty folder for this test run and copy `insureconnect.jar` into it. Open a terminal in that folder and launch the app with `java -jar insureconnect.jar`. Use this same folder for every relaunch; InsureConnect stores `data/addressbook.json` and `preferences.json` relative to the launch folder.
 
-### Launch and shutdown
+   **Expected:** The app opens with no customers. A missing data file is treated as an empty list.
 
-1. Initial launch
+1. Add three customers using the following commands:
 
-   1. Download the JAR file and copy it into an empty folder.
+   ```text
+   add n/Alice Tan p/91234567 e/alice.tan@example.com a/10 Test Street t/LIFE20001 t/HEALTH20001 r/Call after 6pm
+   add n/Bob Lim p/81234567 e/bob.lim@example.com a/20 Sample Road t/MOTOR20002
+   add n/Caroline Ng p/98765432 e/caroline.ng@example.com a/30 Sample Crescent t/TRAVEL20003
+   ```
 
-   1. Double-click the JAR file.<br>
-      Expected: The GUI opens with an empty address book. The window size may not be optimal.
+   **Expected:** Each customer appears once in the list. Press F6 twice to focus the customer list. Selecting a customer with Up/Down updates the details panel. Alice has two policies and a remark; the other remarks are empty.
 
-1. Saving window preferences
+### Exercise commands and customer records
 
-   1. Resize the window to an optimal size. Move the window to a different location. Close the window.
+1. Try `list` and `list n/`. While the name sort is active, add one more customer, then run `list n/`, `list c/`, and `list`:
 
-   1. Relaunch the app by double-clicking the JAR file.<br>
-       Expected: The most recent window size and location are retained.
+   ```text
+   add n/Aaron Goh p/87776666 e/aaron.goh@example.com a/40 Example Walk t/LIFE20004
+   ```
 
-1. _{ more test cases …​ }_
+   **Expected:** `list` restores insertion order, `list n/` sorts by name, and `list c/` sorts by creation time. Aaron appears first in name order and last in insertion and creation-time order. Adding a customer preserves the active sort.
 
-### Viewing help
+1. Try `find Ali`, `find p/912`, `find t/life20001`, and `find n/Alice p/912 t/LIFE20001`, then run `list`.
 
-1. Opening the Help window
+   **Expected:** The searches find Alice by name prefix, phone prefix, and case-insensitive exact policy number. The combined search returns Alice only. A new search replaces the previous filter; `list` restores all four customers.
 
-   1. Test case: Enter `help`.<br>
-      Expected: The Help window opens with formats for all eight commands and a link to the User Guide.
+1. Try this duplicate, then edit Alice (the first customer after `list`) and check the details panel:
 
-   1. Test case: Click **Copy URL**.<br>
-      Expected: The User Guide URL is copied to the clipboard.
+   ```text
+   add n/Alice Tan p/91234567 e/another@example.com a/40 Test Avenue t/LIFE20999
+   edit 1 r/Follow up next week
+   edit 1 e/alice.updated@example.com
+   edit 1 r/
+   ```
 
-   1. Test case: Close the Help window, then open it using the Help menu or F1.<br>
-      Expected: The same Help window content appears.
+   **Expected:** The duplicate is rejected and the list is unchanged. The remark is set, remains after editing the email, and is then cleared. The policy numbers remain Alice's original two because they were omitted from the edits.
 
-### Deleting a person
+1. Try `delete 2`, then enter `n`. Repeat `delete 2`, then enter `y`.
 
-1. Deleting a person while all persons are being shown
+   **Expected:** The first response cancels deletion and Bob remains. The second confirms deletion and Bob is removed. Confirmation responses are `y` or `n`; any other response cancels.
 
-   1. Prerequisites: List all persons using the `list` command, with multiple persons in the list.
+1. Try `clear`, then enter `n`.
 
-   1. Test case: `delete 1`<br>
-      Expected: No contact is deleted. The status message requests confirmation by entering `confirm`.
+   **Expected:** The clear is cancelled and all remaining customers stay in the list.
 
-   1. Test case: `confirm`<br>
-      Expected: The first contact is deleted from the list. The status message shows the deleted contact's details.
+### Exercise the interface
 
-   1. Test case: `delete 0`<br>
-      Expected: No person is deleted. The status message shows error details.
+1. Enter `help` and check that the Help window shows the command formats and instructions for opening the offline User Guide. Click **Copy URL**, open a browser, and paste the URL to view the online User Guide. Return to InsureConnect and close the Help window with **Esc** or **F1**.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+1. Enter `userguide` to open the bundled User Guide in your browser. If it cannot be opened, check that InsureConnect displays the file path so you can open the guide manually.
 
-1. _{ more test cases …​ }_
+1. In the command box, type `lis` and press **Tab**.
 
-### Editing a remark
+   **Expected:** The suggestion completes the command word to `list`; press Enter to run it. Submit a few different commands, type an unfinished draft, then use Up/Down to recall earlier commands and return to the draft. History lasts for the current app session.
 
-1. Set, preserve, and clear a remark
+1. Press **F6** repeatedly to cycle through the command box, output box, and customer list; use **Shift+F6** to cycle backward. Check that a partially typed command is retained. In the output box, select feedback text and use the system copy shortcut. In the customer list, use Up/Down to change the selected customer. If the list is longer than the visible area, use Page Up/Page Down to browse it.
 
-   1. Prerequisites: List all persons using `list`, with at least one person in the list.
+1. Switch between light and dark with **View → Colour scheme** and F2, including while Help is open. Try `resize p/min`, `resize p/med`, `resize p/max`, and `resize s/1000 700` if that size fits your screen; otherwise use a custom size that fits.
 
-   1. Test case: `edit 1 r/Follow up next week`<br>
-      Expected: The first person's remark becomes `Follow up next week`.
+   **Expected:** The selected colour scheme applies to the main and Help windows. Resize commands change the main window and keep it within the usable screen area; a custom size must fit the current screen.
 
-   1. Test case: `edit 1 e/updated@example.com`<br>
-      Expected: The email changes and the remark remains `Follow up next week`.
+### Check persistence after relaunch
 
-   1. Test case: `edit 1 r/`<br>
-      Expected: The first person's remark becomes empty.
+1. Before the final `clear`, note the customer list, choose a colour scheme, resize and move the window, then enter `exit`. Relaunch from the same working folder.
 
-   1. Test case: `edit 1 r/` followed by 501 characters<br>
-      Expected: The edit is rejected because the remark exceeds 500 characters.
+   **Expected:** The customer records, window size and location, and colour scheme are restored. Customer records are saved after successful changes; the app does not save them at a confirmation prompt or after a cancelled operation.
 
-### Saving data
+### Optional data-file checks
 
-1. Dealing with missing/corrupted data files
+These checks involve editing files directly. Perform them only in the isolated test folder, and copy `data/addressbook.json` to a backup before changing it.
 
-   1. _{Explain how to simulate missing or corrupted data files and state the expected behavior.}_
+1. **Legacy record:** With the app closed, edit the saved JSON and remove the `createdAt` property from one customer object without changing its other fields. Relaunch the app and run `list c/`.
 
-1. _{ more test cases …​ }_
+   **Expected:** The customer loads. A missing creation time is treated as `1970-01-01T00:00:00Z`, so that customer appears before records with current creation times. Loading alone does not rewrite the file. Edit that customer and check the saved JSON; the creation time is then written as the epoch timestamp. Close the app and restore the valid backup.
+
+1. **Corrupted file:** Make `data/addressbook.json` invalid JSON (for example, replace its contents with `{ invalid`) and relaunch the app.
+
+   **Expected:** A warning appears and the app starts with an empty customer list. Try `add n/Test User p/87654321 e/test.user@example.com a/50 Sample Street t/LIFE20999`; the save fails, the list remains empty, and the invalid file is not overwritten. Close the app and restore the valid backup.
+
+### Finish the walkthrough
+
+1. Relaunch with the restored customer data, run `clear`, and enter `y`.
+
+   **Expected:** All customers are removed and `list` shows an empty list. The working folder is disposable, so clearing its records is safe.

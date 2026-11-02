@@ -24,6 +24,7 @@ pre { overflow-x: auto; padding: 12px; background: #edf1f5; }
 <p class="notice">This complete guide is bundled with InsureConnect and works offline.
 External links, such as downloads and Java installation instructions, require internet access.</p>
 <p>InsureConnect is a <strong>desktop application for managing contacts, optimized for use through a Command Line Interface (CLI)</strong> while retaining the benefits of a Graphical User Interface (GUI). If you type quickly, InsureConnect can help you manage contacts faster than traditional GUI applications.</p>
+<p>InsureConnect stores customer contact details and associated policy numbers. You can use a policy number to find its customer record. It does not store policy coverage, premiums, renewal dates or policy status; consult your insurer's records for these details. Remarks belong to the customer record, not to an individual policy.</p>
 <div class="toc">
 <ul>
 <li><a href="#quick-start">Quick start</a></li>
@@ -129,7 +130,7 @@ Modified arrow shortcuts and arrow keys in other areas retain their usual behavi
 <p>As you type the start of a command word, the rest of the word appears as faded text after the caret.
 For example, typing <code>ed</code> shows <code>edit</code>. Press <strong>Tab</strong> to fill in the suggested word, then continue typing as usual.
 Pressing Tab only fills in the word; press Enter to run the command.
-When several commands match, the first in alphabetical order is suggested, so <code>c</code> suggests <code>clear</code>. Type more letters to narrow it down, such as <code>co</code> for <code>confirm</code>.
+When several commands match, the first in alphabetical order is suggested, so <code>c</code> suggests <code>clear</code>. Type more letters to narrow it down, such as <code>ex</code> for <code>exit</code>.
 Suggestions appear only for command words, only while the caret is at the end of the text, and match lowercase input exactly.</p>
 <h2 id="changing-the-colour-scheme">Changing the colour scheme</h2>
 <p>Choose <strong>View → Colour scheme → Light</strong> or <strong>Dark</strong> from the menu bar. The
@@ -158,7 +159,7 @@ preserves your command text, output, and selected contact.</p>
 
 * **Name constraints**: `NAME` must start with a Latin-script letter or digit. It may contain Latin-script letters (including accented letters such as `é` and `ö`), combining accent marks, digits, spaces, and the characters `-`, `'`, `’`, `.`, `/`, and `!`. Names written in other scripts are not supported, and names cannot consist solely of punctuation (e.g. `---`, `...`, `///` are invalid).
 
-* **Policy number constraints**: Each `t/POLICY_NUMBER` contains 1 to 30 letters or digits. Every customer needs at least one policy number, and a policy number can belong to only one customer. Policy numbers are case-insensitive and are displayed in updates. For example, life20481 and LIFE20481 refer to the same policy number.
+* **Policy number constraints**: Each `t/POLICY_NUMBER` must be 1 to 30 characters long, contain at least one letter or digit, and may include hyphens (`-`) or slashes (`/`). Spaces and other punctuation are not allowed. Every customer needs at least one policy number, and a policy number can belong to only one customer. Policy numbers are case-insensitive and are displayed in uppercase. For example, life20481 and LIFE20481 refer to the same policy number.
 
 * **Escape character (`!`) for name, address, and remark prefix collisions**:
   Command prefixes are identified by a space followed by a letter and a slash (e.g. ` a/` for address, ` t/` for policy number). Names, addresses, or remarks that contain these patterns can conflict with command prefixes if typed directly.<br>
@@ -205,7 +206,7 @@ preserves your command text, output, and selected contact.</p>
 </tr>
 <tr>
 <td><code>t/POLICY_NUMBER</code></td>
-<td>1 to 30 letters or digits; no spaces or punctuation. Every customer must have at least one policy number. A policy number can belong to only one customer; matching ignores case (for example, <code>life20481</code> and <code>LIFE20481</code> are the same number).</td>
+<td>1 to 30 characters, containing at least one letter or digit. Hyphens (<code>-</code>) and slashes (<code>/</code>) are allowed; spaces and other punctuation are not. Every customer must have at least one policy number. A policy number can belong to only one customer; matching ignores case (for example, <code>life20481</code> and <code>LIFE20481</code> are the same number).</td>
 </tr>
 <tr>
 <td><code>r/REMARK</code></td>
@@ -314,7 +315,7 @@ within <code>n/</code>, matching <strong>any keyword (OR)</strong> is sufficient
 <li><code>find t/LIFE20001</code> searches by policy number alone.</li>
 </ul>
 <p>Name matching remains case-insensitive and ranks exact name words before prefix-only matches.
-Phone prefixes contain digits only with an optional leading <code>+</code>. Policy numbers match exactly, ignoring case, and contain 1–30 letters or digits.
+Phone prefixes contain digits only with an optional leading <code>+</code>. Policy numbers match exactly, ignoring case, and contain 1–30 characters with at least one letter or digit; hyphens and slashes are allowed.
 Phone and policy searches without a name criterion retain stored order.
 Each new search replaces the previous filter; it does not narrow the previous results.</p>
 <p>Empty values and repeated fields are rejected. Use <code>find n/Alice p/912</code>, not <code>find Alice p/912</code>.
@@ -322,12 +323,12 @@ Only <code>n/</code>, <code>p/</code>, and <code>t/</code> are supported in pref
 As in <code>add</code>, escape those prefixes with <code>!</code> when they are part of a name, for example <code>find n/Mohd !a/l</code>.
 Other slashes need no escaping, for example <code>find n/Ravi s/o p/912</code>.
 Existing unprefixed name searches and <code>find p/DIGITS</code> remain available.</p>
-<p>To search by policy number, use <code>find t/POLICY_NUMBER</code>, for example <code>find t/LIFE20001</code>.</p>
+<p>To search by policy number, use <code>find t/POLICY_NUMBER</code>, for example <code>find t/LIFE-2026/SG</code>.</p>
 <ul>
 <li>Policy-number searches use an exact match and are case-insensitive. For example,
-  <code>find t/life20001</code> finds a customer with policy number <code>LIFE20001</code>.</li>
-<li>Supply exactly one policy number containing 1 to 30 letters or digits. Spaces, punctuation,
-  and multiple policy numbers are rejected.</li>
+  <code>find t/life-2026/sg</code> finds a customer with policy number <code>LIFE-2026/SG</code>.</li>
+<li>Supply exactly one policy number containing 1 to 30 characters with at least one letter or digit.
+  Hyphens and slashes are allowed; spaces, other punctuation, and multiple policy numbers are rejected.</li>
 <li>Combine <code>t/</code> with explicit <code>n/</code> and <code>p/</code> fields as described above.</li>
 <li>A policy-number search replaces the previous search and display sort. Use the displayed
   indexes for <code>edit</code> and <code>delete</code>.</li>

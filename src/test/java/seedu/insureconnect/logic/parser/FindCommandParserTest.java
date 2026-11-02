@@ -86,16 +86,22 @@ public class FindCommandParserTest {
 
     @Test
     public void parse_policyNumber_returnsPolicyNumberSearch() {
+        // EP: valid alphanumeric policy number
         assertParseSuccess(parser, "t/LIFE20001",
                 new FindCommand(new PolicyNumberMatchesPredicate("LIFE20001")));
 
+        // EP: valid lowercase policy number with surrounding whitespace
         assertParseSuccess(parser, " \t t/life20001 \n",
                 new FindCommand(new PolicyNumberMatchesPredicate("life20001")));
+
+        // EP: valid policy number with supported hyphen and slash separators
+        assertParseSuccess(parser, "t/LIFE-2026/SG",
+                new FindCommand(new PolicyNumberMatchesPredicate("LIFE-2026/SG")));
     }
 
     @Test
     public void parse_invalidPolicyNumber_throwsParseException() {
-        for (String query : List.of("t/", "t/  ", "t/LIFE-20001", "t/LIFE 20001",
+        for (String query : List.of("t/", "t/  ", "t/LIFE_20001", "t/LIFE 20001",
                 "t/LIFE20001 Alice")) {
             assertParseFailure(parser, query, Tag.MESSAGE_CONSTRAINTS);
         }

@@ -24,13 +24,33 @@ public class TagTest {
     public void isValidTagName() {
         // null tag name
         assertThrows(NullPointerException.class, () -> Tag.isValidTagName(null));
+
+        // EP: valid alphanumeric policy numbers
         assertTrue(Tag.isValidTagName("A"));
         assertTrue(Tag.isValidTagName("LIFE20481"));
-        assertTrue(Tag.isValidTagName("A".repeat(30)));
+
+        // EP: valid policy numbers containing supported separators
+        assertTrue(Tag.isValidTagName("POLICY-123"));
+        assertTrue(Tag.isValidTagName("POLICY/123"));
+        assertTrue(Tag.isValidTagName("LIFE-2026/SG"));
+
+        // Boundary value: maximum permitted length (30 characters)
+        assertTrue(Tag.isValidTagName("A".repeat(28) + "-/"));
+
+        // EP: empty or separator-only policy numbers
         assertFalse(Tag.isValidTagName(""));
+        assertFalse(Tag.isValidTagName("-"));
+        assertFalse(Tag.isValidTagName("/"));
+        assertFalse(Tag.isValidTagName("-/"));
+
+        // Boundary value: above maximum permitted length
         assertFalse(Tag.isValidTagName("A".repeat(31)));
-        assertFalse(Tag.isValidTagName("POLICY-123"));
+
+        // EP: policy numbers containing prohibited characters
         assertFalse(Tag.isValidTagName("POLICY 123"));
+        assertFalse(Tag.isValidTagName("POLICY_123"));
+        assertFalse(Tag.isValidTagName("POLICY.123"));
+        assertFalse(Tag.isValidTagName("POLICY@123"));
     }
 
     @Test
