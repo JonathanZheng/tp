@@ -1,10 +1,7 @@
 package seedu.insureconnect.ui;
 
-import java.awt.Desktop;
 import java.awt.Point;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Comparator;
 import java.util.logging.Logger;
@@ -54,8 +51,6 @@ public class MainWindow extends UiPart<Stage> {
     private static final double MIN_HEIGHT = 600;
     private static final KeyCombination TOGGLE_COLOUR_SCHEME =
             new KeyCodeCombination(KeyCode.F2);
-    private static final String MESSAGE_USER_GUIDE_OPEN_FAILURE =
-            "Unable to open the User Guide in your browser.";
 
     private final Logger logger = LogsCenter.getLogger(getClass());
     private final UserGuideOpener userGuideOpener;
@@ -119,7 +114,7 @@ public class MainWindow extends UiPart<Stage> {
     public MainWindow(Stage primaryStage, Logic logic, Path ignoredDataFilePath,
                       String initialFeedback) {
         this(primaryStage, logic, ignoredDataFilePath, initialFeedback,
-                MainWindow::openUserGuideInBrowser);
+                OfflineUserGuide::open);
     }
 
     /**
@@ -525,27 +520,14 @@ public class MainWindow extends UiPart<Stage> {
     }
 
     /**
-     * Opens the online User Guide in the user's default web browser.
+     * Opens the offline User Guide in the user's default web browser.
      */
     private void openUserGuide() throws CommandException {
         try {
             userGuideOpener.open();
-        } catch (IOException | URISyntaxException e) {
-            throw new CommandException(MESSAGE_USER_GUIDE_OPEN_FAILURE, e);
+        } catch (IOException e) {
+            throw new CommandException(e.getMessage(), e);
         }
-    }
-
-    /**
-     * Opens the online User Guide with the desktop browser integration.
-     */
-    private static void openUserGuideInBrowser()
-            throws IOException, URISyntaxException {
-        if (!Desktop.isDesktopSupported()
-                || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-            throw new IOException("Desktop browsing is not supported.");
-        }
-
-        Desktop.getDesktop().browse(new URI(HelpWindow.USERGUIDE_URL));
     }
 
     /**
@@ -591,6 +573,6 @@ public class MainWindow extends UiPart<Stage> {
 
     @FunctionalInterface
     interface UserGuideOpener {
-        void open() throws IOException, URISyntaxException;
+        void open() throws IOException;
     }
 }
