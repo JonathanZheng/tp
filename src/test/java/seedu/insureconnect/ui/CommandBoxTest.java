@@ -132,9 +132,15 @@ public class CommandBoxTest extends GuiTest {
     }
 
     @Test
-    public void findSuggestion_userguidePrefix_returnsRemainingCommandWord() {
-        // EP: unique lowercase partial command word
-        assertEquals("serguide", CommandBox.findSuggestion("u"));
+    public void findSuggestion_userGuideAliasPrefix_returnsRemainingAlias() {
+        // EP: prefix shared by the alias and full command word
+        assertEquals("g", CommandBox.findSuggestion("u"));
+    }
+
+    @Test
+    public void findSuggestion_userGuideCommandPrefix_returnsRemainingCommandWord() {
+        // EP: prefix matching only the full command word
+        assertEquals("erguide", CommandBox.findSuggestion("us"));
     }
 
     @Test

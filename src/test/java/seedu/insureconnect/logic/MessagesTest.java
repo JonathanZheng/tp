@@ -3,6 +3,7 @@ package seedu.insureconnect.logic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static seedu.insureconnect.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 
 import java.util.List;
 
@@ -58,5 +59,12 @@ public class MessagesTest {
     @Test
     public void invalidPersonDisplayedIndex_negativeListSize_throwsAssertionError() {
         assertThrows(AssertionError.class, () -> Messages.getInvalidPersonDisplayedIndexMessage(-1));
+    }
+
+    @Test
+    public void unknownCommandMessage_includesHelpCommandAndKeyboardShortcut() {
+        assertEquals(
+                "Unknown command. Type help or press F1 to see the available commands.",
+                MESSAGE_UNKNOWN_COMMAND);
     }
 }
