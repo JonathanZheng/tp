@@ -112,7 +112,7 @@ preserves your command text, output, and selected contact.
 * Parameters can be in any order.<br>
   For example, if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
 
-* **Name constraints**: `NAME` must start with an alphanumeric character and can only contain alphanumeric characters, spaces, and the characters: `-`, `'`, `.`, `/`, and `!`. Names cannot consist solely of punctuation (e.g. `---`, `...`, `///` are invalid).
+* **Name constraints**: `NAME` must start with a Latin-script letter or digit. It may contain Latin-script letters (including accented letters such as `é` and `ö`), combining accent marks, digits, spaces, and the characters `-`, `'`, `’`, `.`, `/`, and `!`. Names written in other scripts are not supported, and names cannot consist solely of punctuation (e.g. `---`, `...`, `///` are invalid).
 
 * **Policy number constraints**: Each `t/POLICY_NUMBER` contains 1 to 30 letters or digits. Every customer needs at least one policy number, and a policy number can belong to only one customer. Policy numbers are case-insensitive and are displayed in updates. For example, life20481 and LIFE20481 refer to the same policy number.
 

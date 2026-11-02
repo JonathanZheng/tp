@@ -149,6 +149,13 @@ public class EditCommandParserTest {
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 
+        // EP: name uses precomposed and decomposed Latin accents with a curly apostrophe
+        String unicodeName = "José O\u0308zdemir D’Angelo";
+        userInput = targetIndex.getOneBased() + " n/" + unicodeName;
+        descriptor = new EditPersonDescriptorBuilder().withName(unicodeName).build();
+        expectedCommand = new EditCommand(targetIndex, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+
         // phone
         userInput = targetIndex.getOneBased() + PHONE_DESC_AMY;
         descriptor = new EditPersonDescriptorBuilder().withPhone(VALID_PHONE_AMY).build();

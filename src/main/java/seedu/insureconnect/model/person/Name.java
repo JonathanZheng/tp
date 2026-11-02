@@ -10,14 +10,15 @@ import static seedu.insureconnect.commons.util.AppUtil.checkArgument;
 public class Name {
 
     public static final String MESSAGE_CONSTRAINTS =
-            "Names should start with an alphanumeric character, and can only contain alphanumeric characters, "
-            + "spaces, and the characters: - ' . / !";
+            "Names should start with a Latin letter or digit, and can only contain Latin letters, combining marks, "
+            + "digits, spaces, and the characters: - ' ’ . / !";
 
     /*
-     * The first character of the name must be an alphanumeric character.
+     * The first character of the name must be a Latin letter or ASCII digit.
      * This ensures names cannot be blank or consist solely of punctuation (e.g. "---").
      */
-    public static final String VALIDATION_REGEX = "[\\p{Alnum}][\\p{Alnum} '\\-\\./!]*";
+    public static final String VALIDATION_REGEX = "(?:\\p{IsLatin}\\p{M}*|[0-9])"
+            + "(?:\\p{IsLatin}\\p{M}*|[0-9 '\\-\\./!’])*";
 
     public final String fullName;
 
