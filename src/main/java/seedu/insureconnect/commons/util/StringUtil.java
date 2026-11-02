@@ -35,14 +35,15 @@ public final class StringUtil {
         checkArgument(preppedWord.split("\\s+").length == 1, "Word parameter should be a single word");
 
         String preppedSentence = sentence;
-        String[] wordsInPreppedSentence = preppedSentence.split("\\s+");
+        String[] wordsInPreppedSentence = preppedSentence.split("[\\s-]+");
 
         return Arrays.stream(wordsInPreppedSentence)
                 .anyMatch(preppedWord::equalsIgnoreCase);
     }
 
     /**
-     * Returns true if any whitespace-separated word in {@code sentence} starts with {@code prefix}, ignoring case.
+     * Returns true if any whitespace- or hyphen-separated word in {@code sentence}
+     * starts with {@code prefix}, ignoring case.
      *
      * @param sentence cannot be null
      * @param prefix cannot be null, cannot be empty, must be a single word; surrounding whitespace is ignored
@@ -55,7 +56,7 @@ public final class StringUtil {
         checkArgument(!trimmedPrefix.isEmpty(), "Prefix parameter cannot be empty");
         checkArgument(trimmedPrefix.split("\\s+").length == 1, "Prefix parameter should be a single word");
 
-        return Arrays.stream(sentence.split("\\s+"))
+        return Arrays.stream(sentence.split("[\\s-]+"))
                 .anyMatch(word -> word.regionMatches(true, 0, trimmedPrefix, 0, trimmedPrefix.length()));
     }
 
