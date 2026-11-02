@@ -46,6 +46,16 @@ public class JsonAdaptedPersonTest {
     }
 
     @Test
+    public void toModelType_nameWithAccents_returnsPerson() throws Exception {
+        String unicodeName = "José O\u0308zdemir D’Angelo";
+        JsonAdaptedPerson person = new JsonAdaptedPerson(
+                unicodeName, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS, VALID_TAGS, null, VALID_CREATED_AT);
+
+        // EP: restored name contains precomposed and decomposed Latin accents and a curly apostrophe
+        assertEquals(new Name(unicodeName), person.toModelType().getName());
+    }
+
+    @Test
     public void toModelType_invalidName_throwsIllegalValueException() {
         JsonAdaptedPerson person =
             new JsonAdaptedPerson(INVALID_NAME, VALID_PHONE, VALID_EMAIL, VALID_ADDRESS,

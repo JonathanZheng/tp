@@ -74,6 +74,17 @@ public class AddCommandParserTest {
     }
 
     @Test
+    public void parse_nameWithAccents_success() {
+        String unicodeName = "José O\u0308zdemir D’Angelo";
+        Person expectedPerson = new PersonBuilder(BOB).withName(unicodeName)
+                .withTags(VALID_TAG_FRIEND).build();
+
+        // EP: name uses precomposed and decomposed Latin accents with a curly apostrophe
+        assertParseSuccess(parser, " n/" + unicodeName + " " + PHONE_DESC_BOB + EMAIL_DESC_BOB
+                + ADDRESS_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedPerson));
+    }
+
+    @Test
     public void parse_addressWithEscapedPrefixAndExclamation_success() {
         Person expectedPerson = new PersonBuilder(BOB).withAddress("Blk 123 t/4!")
                 .withTags(VALID_TAG_FRIEND).build();
