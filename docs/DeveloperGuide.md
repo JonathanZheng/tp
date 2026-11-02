@@ -450,7 +450,7 @@ The walkthrough below exercises the main features together. It complements the [
 
    **Expected:** The app opens with no customers. A missing data file is treated as an empty list.
 
-1. Add three customers using the following commands:
+2. Add three customers using the following commands:
 
    ```text
    add n/Alice Tan p/91234567 e/alice.tan@example.com a/10 Test Street t/LIFE20001 t/HEALTH20001 r/Call after 6pm
@@ -470,11 +470,11 @@ The walkthrough below exercises the main features together. It complements the [
 
    **Expected:** `list` restores insertion order, `list n/` sorts by name, and `list c/` sorts by creation time. Aaron appears first in name order and last in insertion and creation-time order. Adding a customer preserves the active sort.
 
-1. Try `find Ali`, `find p/912`, `find t/life20001`, and `find n/Alice p/912 t/LIFE20001`, then run `list`.
+2. Try `find Ali`, `find p/912`, `find t/life20001`, and `find n/Alice p/912 t/LIFE20001`, then run `list`.
 
    **Expected:** The searches find Alice by name prefix, phone prefix, and case-insensitive exact policy number. The combined search returns Alice only. A new search replaces the previous filter; `list` restores all four customers.
 
-1. Try this duplicate, then edit Alice (the first customer after `list`) and check the details panel:
+3. Try this duplicate, then edit Alice (the first customer after `list`) and check the details panel:
 
    ```text
    add n/Alice Tan p/91234567 e/another@example.com a/40 Test Avenue t/LIFE20999
@@ -485,11 +485,11 @@ The walkthrough below exercises the main features together. It complements the [
 
    **Expected:** The duplicate is rejected and the list is unchanged. The remark is set, remains after editing the email, and is then cleared. The policy numbers remain Alice's original two because they were omitted from the edits.
 
-1. Try `delete 2`, then enter `n`. Repeat `delete 2`, then enter `y`.
+4. Try `delete 2`, then enter `n`. Repeat `delete 2`, then enter `y`.
 
    **Expected:** The first response cancels deletion and Bob remains. The second confirms deletion and Bob is removed. Confirmation responses are `y` or `n`; any other response cancels.
 
-1. Try `clear`, then enter `n`.
+5. Try `clear`, then enter `n`.
 
    **Expected:** The clear is cancelled and all remaining customers stay in the list.
 
@@ -497,15 +497,15 @@ The walkthrough below exercises the main features together. It complements the [
 
 1. Enter `help` and check that the Help window shows the command formats and instructions for opening the offline User Guide. Click **Copy URL**, open a browser, and paste the URL to view the online User Guide. Return to InsureConnect and close the Help window with **Esc** or **F1**.
 
-1. Enter `userguide` to open the bundled User Guide in your browser. If it cannot be opened, check that InsureConnect displays the file path so you can open the guide manually.
+2. Enter `userguide` to open the bundled User Guide in your browser. If it cannot be opened, check that InsureConnect displays the file path so you can open the guide manually.
 
-1. In the command box, type `lis` and press **Tab**.
+3. In the command box, type `lis` and press **Tab**.
 
    **Expected:** The suggestion completes the command word to `list`; press Enter to run it. Submit a few different commands, type an unfinished draft, then use Up/Down to recall earlier commands and return to the draft. History lasts for the current app session.
 
-1. Press **F6** repeatedly to cycle through the command box, output box, and customer list; use **Shift+F6** to cycle backward. Check that a partially typed command is retained. In the output box, select feedback text and use the system copy shortcut. In the customer list, use Up/Down to change the selected customer. If the list is longer than the visible area, use Page Up/Page Down to browse it.
+4. Press **F6** repeatedly to cycle through the command box, output box, and customer list; use **Shift+F6** to cycle backward. Check that a partially typed command is retained. In the output box, select feedback text and use the system copy shortcut. In the customer list, use Up/Down to change the selected customer. If the list is longer than the visible area, use Page Up/Page Down to browse it.
 
-1. Switch between light and dark with **View → Colour scheme** and F2, including while Help is open. Try `resize p/min`, `resize p/med`, `resize p/max`, and `resize s/1000 700` if that size fits your screen; otherwise use a custom size that fits.
+5. Switch between light and dark with **View → Colour scheme** and F2, including while Help is open. Try `resize p/min`, `resize p/med`, `resize p/max`, and `resize s/1000 700` if that size fits your screen; otherwise use a custom size that fits.
 
    **Expected:** The selected colour scheme applies to the main and Help windows. Resize commands change the main window and keep it within the usable screen area; a custom size must fit the current screen.
 
@@ -523,7 +523,7 @@ These checks involve editing files directly. Perform them only in the isolated t
 
    **Expected:** The customer loads. A missing creation time is treated as `1970-01-01T00:00:00Z`, so that customer appears before records with current creation times. Loading alone does not rewrite the file. Edit that customer and check the saved JSON; the creation time is then written as the epoch timestamp. Close the app and restore the valid backup.
 
-1. **Corrupted file:** Make `data/addressbook.json` invalid JSON (for example, replace its contents with `{ invalid`) and relaunch the app.
+2. **Corrupted file:** Make `data/addressbook.json` invalid JSON (for example, replace its contents with `{ invalid`) and relaunch the app.
 
    **Expected:** A warning appears and the app starts with an empty customer list. Try `add n/Test User p/87654321 e/test.user@example.com a/50 Sample Street t/LIFE20999`; the save fails, the list remains empty, and the invalid file is not overwritten. Close the app and restore the valid backup.
 
