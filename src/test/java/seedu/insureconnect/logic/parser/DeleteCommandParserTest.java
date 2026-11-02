@@ -1,8 +1,8 @@
 package seedu.insureconnect.logic.parser;
 
-import static seedu.insureconnect.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.insureconnect.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.insureconnect.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.insureconnect.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.insureconnect.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 
 import org.junit.jupiter.api.Test;
@@ -27,6 +27,8 @@ public class DeleteCommandParserTest {
 
     @Test
     public void parse_invalidArgs_throwsParseException() {
-        assertParseFailure(parser, "a", String.format(MESSAGE_INVALID_COMMAND_FORMAT, DeleteCommand.MESSAGE_USAGE));
+        assertParseFailure(parser, "a", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "0", MESSAGE_INVALID_INDEX);
+        assertParseFailure(parser, "-1", MESSAGE_INVALID_INDEX);
     }
 }
