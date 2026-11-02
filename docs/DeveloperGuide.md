@@ -481,7 +481,9 @@ The walkthrough below exercises the main features together. It complements the [
 
 ### Exercise the interface
 
-1. Enter `help`, check that the Help window shows command formats and the User Guide link, and click **Copy URL**. Paste into a text field to check the copied URL. Close Help with **Esc** or **F1**, then reopen it with the **Help** menu and F1. Try `userguide` to open the bundled user guide.
+1. Enter `help` and check that the Help window shows the command formats and User Guide link. Click **Copy URL**, open a browser, and paste the URL to view the online User Guide. Return to InsureConnect and close the Help window with **Esc** or **F1**.
+
+1. Enter `userguide` to open the bundled User Guide in your browser. If it cannot be opened, check that InsureConnect displays the file path so you can open the guide manually.
 
 1. In the command box, type `lis` and press **Tab**.
 
