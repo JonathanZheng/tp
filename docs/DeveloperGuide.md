@@ -15,7 +15,9 @@ title: Developer Guide
 Notable uses of AI:
 
 * OpenAI Codex and Claude Code were used to assist with implementation, tests, debugging and documentation.
+* All AI-generated output was reviewed and appropriately adapted before use.
 * @JonathanZheng used OpenAI Codex for preliminary PR reviews and to implement and test the offline User Guide.
+* @BenjaminWong33 used OpenAI Codex to explain the codebase, generate ideas, assist with debugging and testing, and suggest implementation approaches.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -106,7 +108,7 @@ Here's a (partial) class diagram of the `Logic` component:
 
 <img src="images/LogicClassDiagram.png" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` followed by `execute("confirm")` API calls as an example.
+The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` followed by a confirmation response such as `execute("y")` as an example.
 
 ![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
 
@@ -116,10 +118,10 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, the command is passed to an `InsureConnectParser` object, which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
+2. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
+3. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
    Note that although this is shown as a single step in the diagram above for simplicity, the code can require several interactions between the command object and the `Model` to complete the operation.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned from `Logic`.
+4. The result of the command execution is encapsulated as a `CommandResult` object which is returned from `Logic`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
@@ -451,17 +453,17 @@ testers are expected to do more *exploratory* testing.
 
    1. Download the JAR file and copy it into an empty folder.
 
-   1. Double-click the JAR file.<br>
+   2. Double-click the JAR file.<br>
       Expected: The GUI opens with an empty address book. The window size may not be optimal.
 
-1. Saving window preferences
+2. Saving window preferences
 
    1. Resize the window to an optimal size. Move the window to a different location. Close the window.
 
-   1. Relaunch the app by double-clicking the JAR file.<br>
+   2. Relaunch the app by double-clicking the JAR file.<br>
        Expected: The most recent window size and location are retained.
 
-1. _{ more test cases …​ }_
+3. _{ more test cases …​ }_
 
 ### Viewing help
 
@@ -470,10 +472,10 @@ testers are expected to do more *exploratory* testing.
    1. Test case: Enter `help`.<br>
       Expected: The Help window opens with formats for all ten commands and a link to the User Guide.
 
-   1. Test case: Click **Copy URL**.<br>
+   2. Test case: Click **Copy URL**.<br>
       Expected: The User Guide URL is copied to the clipboard.
 
-   1. Test case: Close the Help window, then open it using the Help menu or F1.<br>
+   3. Test case: Close the Help window, then open it using the Help menu or F1.<br>
       Expected: The same Help window content appears.
 
 ### Deleting a person
@@ -482,19 +484,19 @@ testers are expected to do more *exploratory* testing.
 
    1. Prerequisites: List all persons using the `list` command, with multiple persons in the list.
 
-   1. Test case: `delete 1`<br>
-      Expected: No contact is deleted. The status message requests confirmation by entering `confirm`.
+   2. Test case: `delete 1`<br>
+      Expected: No contact is deleted. The status message requests confirmation by entering `y`.
 
-   1. Test case: `confirm`<br>
+   3. Test case: `y`<br>
       Expected: The first contact is deleted from the list. The status message shows the deleted contact's details.
 
-   1. Test case: `delete 0`<br>
+   4. Test case: `delete 0`<br>
       Expected: No person is deleted. The status message shows error details.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
+   5. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.
 
-1. _{ more test cases …​ }_
+2. _{ more test cases …​ }_
 
 ### Editing a remark
 
@@ -502,16 +504,16 @@ testers are expected to do more *exploratory* testing.
 
    1. Prerequisites: List all persons using `list`, with at least one person in the list.
 
-   1. Test case: `edit 1 r/Follow up next week`<br>
+   2. Test case: `edit 1 r/Follow up next week`<br>
       Expected: The first person's remark becomes `Follow up next week`.
 
-   1. Test case: `edit 1 e/updated@example.com`<br>
+   3. Test case: `edit 1 e/updated@example.com`<br>
       Expected: The email changes and the remark remains `Follow up next week`.
 
-   1. Test case: `edit 1 r/`<br>
+   4. Test case: `edit 1 r/`<br>
       Expected: The first person's remark becomes empty.
 
-   1. Test case: `edit 1 r/` followed by 501 characters<br>
+   5. Test case: `edit 1 r/` followed by 501 characters<br>
       Expected: The edit is rejected because the remark exceeds 500 characters.
 
 ### Saving data
@@ -520,4 +522,4 @@ testers are expected to do more *exploratory* testing.
 
    1. _{Explain how to simulate missing or corrupted data files and state the expected behavior.}_
 
-1. _{ more test cases …​ }_
+2. _{ more test cases …​ }_
