@@ -27,3 +27,18 @@ title: Documentation guide
 **Converting a document to the PDF format:**
 
 * See the guide [_[se-edu/guides] **Saving web documents as PDF files**_](https://se-education.org/guides/tutorials/savingPdf.html)
+
+**Maintaining the offline User Guide:**
+
+* The `userguide` command opens a self-contained HTML copy bundled in the JAR.
+* After editing `docs/UserGuide.md` or its screenshots, regenerate the copy:
+  ```sh
+  python3 -m pip install Markdown==3.7
+  python3 tools/generate_offline_guide.py
+  ```
+* Commit both files in `docs/offline/` with the source documentation changes.
+  `./gradlew checkOfflineGuide` verifies their source checksums, and both
+  `check` and resource packaging run this check to prevent stale release guides.
+* The generator embeds screenshots and styles. Only external links need a network.
+  Verify the guide's contents, tables, screenshots and table-of-contents links
+  before releasing. Python is needed only for regeneration, not to build or run the app.
