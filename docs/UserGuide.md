@@ -114,7 +114,7 @@ preserves your command text, output, and selected contact.
 
 * **Name constraints**: `NAME` must start with an alphanumeric character and can only contain alphanumeric characters, spaces, and the characters: `-`, `'`, `.`, `/`, and `!`. Names cannot consist solely of punctuation (e.g. `---`, `...`, `///` are invalid).
 
-* **Policy number constraints**: Each `t/POLICY_NUMBER` contains 1 to 30 letters or digits. Every customer needs at least one policy number, and a policy number can belong to only one customer. Policy numbers are case-insensitive and are displayed in updates. For example, life20481 and LIFE20481 refer to the same policy number.
+* **Policy number constraints**: Each `t/POLICY_NUMBER` must be 1 to 30 characters long, contain at least one letter or digit, and may include hyphens (`-`) or slashes (`/`). Spaces and other punctuation are not allowed. Every customer needs at least one policy number, and a policy number can belong to only one customer. Policy numbers are case-insensitive and are displayed in uppercase. For example, life20481 and LIFE20481 refer to the same policy number.
 
 * **Escape character (`!`) for name, address, and remark prefix collisions**:
   Command prefixes are identified by a space followed by a letter and a slash (e.g. ` a/` for address, ` t/` for policy number). Names, addresses, or remarks that contain these patterns can conflict with command prefixes if typed directly.<br>
@@ -143,7 +143,7 @@ These rules apply when adding a customer or changing a field with `edit`:
 | `p/PHONE_NUMBER` | At least 3 digits, with an optional single `+` at the beginning. Spaces, letters, and other punctuation are not allowed. There is no fixed maximum length. |
 | `e/EMAIL` | Format: `local-part@domain`. The local part must start and end with a letter or digit; between them, it may also contain `+`, `_`, `.`, or `-`, each followed by a letter or digit. Domain labels may contain letters, digits, and internal hyphens, but must start and end with a letter or digit. The final domain label must contain at least 2 characters. There is no fixed length limit. For example, `jane.doe+work@example.com` is accepted, but `jane!doe@example.com` is not. |
 | `a/ADDRESS` | Must not be blank. Any nonblank text is accepted, up to 300 characters after leading and trailing whitespace is removed. |
-| `t/POLICY_NUMBER` | 1 to 30 letters or digits; no spaces or punctuation. Every customer must have at least one policy number. A policy number can belong to only one customer; matching ignores case (for example, `life20481` and `LIFE20481` are the same number). |
+| `t/POLICY_NUMBER` | 1 to 30 characters, containing at least one letter or digit. Hyphens (`-`) and slashes (`/`) are allowed; spaces and other punctuation are not. Every customer must have at least one policy number. A policy number can belong to only one customer; matching ignores case (for example, `life20481` and `LIFE20481` are the same number). |
 | `r/REMARK` | Optional and may be empty. At most 500 characters after leading and trailing whitespace is removed and repeated whitespace is collapsed. See the escape character note above for typing `!` and command prefixes in a remark. |
 
 ### Viewing help: `help`
@@ -271,7 +271,7 @@ within `n/`, matching **any keyword (OR)** is sufficient. Policy searches match 
 * `find t/LIFE20001` searches by policy number alone.
 
 Name matching remains case-insensitive and ranks exact name words before prefix-only matches.
-Phone prefixes contain digits only with an optional leading `+`. Policy numbers match exactly, ignoring case, and contain 1–30 letters or digits.
+Phone prefixes contain digits only with an optional leading `+`. Policy numbers match exactly, ignoring case, and contain 1–30 characters with at least one letter or digit; hyphens and slashes are allowed.
 Phone and policy searches without a name criterion retain stored order.
 Each new search replaces the previous filter; it does not narrow the previous results.
 
@@ -281,12 +281,12 @@ As in `add`, escape those prefixes with `!` when they are part of a name, for ex
 Other slashes need no escaping, for example `find n/Ravi s/o p/912`.
 Existing unprefixed name searches and `find p/DIGITS` remain available.
 
-To search by policy number, use `find t/POLICY_NUMBER`, for example `find t/LIFE20001`.
+To search by policy number, use `find t/POLICY_NUMBER`, for example `find t/LIFE-2026/SG`.
 
 * Policy-number searches use an exact match and are case-insensitive. For example,
-  `find t/life20001` finds a customer with policy number `LIFE20001`.
-* Supply exactly one policy number containing 1 to 30 letters or digits. Spaces, punctuation,
-  and multiple policy numbers are rejected.
+  `find t/life-2026/sg` finds a customer with policy number `LIFE-2026/SG`.
+* Supply exactly one policy number containing 1 to 30 characters with at least one letter or digit.
+  Hyphens and slashes are allowed; spaces, other punctuation, and multiple policy numbers are rejected.
 * Combine `t/` with explicit `n/` and `p/` fields as described above.
 * A policy-number search replaces the previous search and display sort. Use the displayed
   indexes for `edit` and `delete`.

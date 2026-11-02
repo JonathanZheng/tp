@@ -11,8 +11,11 @@ import java.util.Locale;
  */
 public class Tag {
 
-    public static final String MESSAGE_CONSTRAINTS = "Policy numbers must contain 1 to 30 letters or digits.";
-    public static final String VALIDATION_REGEX = "[A-Za-z0-9]{1,30}";
+    public static final String MESSAGE_CONSTRAINTS = "Policy numbers must be 1 to 30 characters long, "
+            + "contain at least one letter or digit, and may include hyphens or slashes.";
+
+    public static final String VALIDATION_REGEX =
+            "(?=.*[A-Za-z0-9])[A-Za-z0-9/-]{1,30}";
 
     public final String tagName;
 
