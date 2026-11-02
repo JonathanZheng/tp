@@ -40,4 +40,18 @@ public class MessagesTest {
                 Messages.getErrorMessageForDuplicatePrefixes(new Prefix("p/"), new Prefix("p/")));
         assertThrows(AssertionError.class, Messages::getErrorMessageForDuplicatePrefixes);
     }
+
+    @Test
+    public void invalidPersonDisplayedIndex_nonEmptyList_includesValidRange() {
+        assertEquals("The customer index must be a positive integer within "
+                        + "the currently displayed range (1 to 5).",
+                Messages.getInvalidPersonDisplayedIndexMessage(5));
+    }
+
+    @Test
+    public void invalidPersonDisplayedIndex_emptyList_reportsNoDisplayedCustomers() {
+        assertEquals("The customer index must be a positive integer, "
+                        + "but no customers are currently displayed.",
+                Messages.getInvalidPersonDisplayedIndexMessage(0));
+    }
 }
