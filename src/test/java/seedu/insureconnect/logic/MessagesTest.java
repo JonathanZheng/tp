@@ -54,4 +54,9 @@ public class MessagesTest {
                         + "but no customers are currently displayed.",
                 Messages.getInvalidPersonDisplayedIndexMessage(0));
     }
+
+    @Test
+    public void invalidPersonDisplayedIndex_negativeListSize_throwsAssertionError() {
+        assertThrows(AssertionError.class, () -> Messages.getInvalidPersonDisplayedIndexMessage(-1));
+    }
 }
