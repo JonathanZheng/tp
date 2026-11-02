@@ -53,6 +53,8 @@ public class JsonAdaptedPersonTest {
 
         // EP: restored name contains precomposed and decomposed Latin accents and a curly apostrophe
         assertEquals(new Name(unicodeName), person.toModelType().getName());
+        // EP: restoration preserves the exact decomposed spelling for display and storage
+        assertEquals(unicodeName, person.toModelType().getName().fullName);
     }
 
     @Test

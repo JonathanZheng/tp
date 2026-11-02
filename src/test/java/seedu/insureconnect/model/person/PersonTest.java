@@ -63,6 +63,28 @@ public class PersonTest {
     }
 
     @Test
+    public void isSamePerson_canonicallyEquivalentNamesAndSamePhone_returnsTrue() {
+        Person precomposedName = new PersonBuilder(BOB).withName("José").build();
+        String decomposedSpelling = "Jose\u0301";
+        Person decomposedName = new PersonBuilder(BOB).withName(decomposedSpelling).build();
+
+        // EP: precomposed and decomposed accents represent the same name with the same phone number
+        assertTrue(precomposedName.isSamePerson(decomposedName));
+        assertTrue(decomposedName.isSamePerson(precomposedName));
+        assertEquals(decomposedSpelling, decomposedName.getName().fullName);
+    }
+
+    @Test
+    public void isSamePerson_canonicallyEquivalentNamesAndDifferentPhone_returnsFalse() {
+        Person precomposedName = new PersonBuilder(BOB).withName("José").build();
+        Person decomposedName = new PersonBuilder(BOB).withName("Jose\u0301")
+                .withPhone(ALICE.getPhone().value).build();
+
+        // EP: canonical name match does not override a different phone number
+        assertFalse(precomposedName.isSamePerson(decomposedName));
+    }
+
+    @Test
     public void isSamePerson_normalizedNameButDifferentPhone_returnsFalse() {
         Person editedBob = new PersonBuilder(BOB).withName("bOB   cHOO  ")
                 .withPhone(ALICE.getPhone().value).build();
