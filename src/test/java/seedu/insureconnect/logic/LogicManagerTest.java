@@ -27,7 +27,6 @@ import seedu.insureconnect.commons.util.FileUtil;
 import seedu.insureconnect.logic.commands.AddCommand;
 import seedu.insureconnect.logic.commands.ClearCommand;
 import seedu.insureconnect.logic.commands.CommandResult;
-import seedu.insureconnect.logic.commands.ConfirmDeleteCommand;
 import seedu.insureconnect.logic.commands.DeleteCommand;
 import seedu.insureconnect.logic.commands.ListCommand;
 import seedu.insureconnect.logic.commands.exceptions.CommandException;
@@ -422,9 +421,8 @@ public class LogicManagerTest {
     }
 
     @Test
-    public void execute_confirmWithoutPendingDeletion_throwsCommandException() {
-        assertCommandException(ConfirmDeleteCommand.COMMAND_WORD,
-                ConfirmDeleteCommand.MESSAGE_NO_PENDING_DELETION);
+    public void execute_confirmWithoutPendingDeletion_isUnknownCommand() {
+        assertParseException("confirm", MESSAGE_UNKNOWN_COMMAND);
     }
 
     @Test
@@ -439,8 +437,7 @@ public class LogicManagerTest {
         CommandResult result = logic.execute(ListCommand.COMMAND_WORD);
         assertEquals(DeleteCommand.MESSAGE_CANCELLED, result.getFeedbackToUser());
         assertEquals(unchangedModel, model);
-        assertCommandException(ConfirmDeleteCommand.COMMAND_WORD,
-                ConfirmDeleteCommand.MESSAGE_NO_PENDING_DELETION);
+        assertParseException("confirm", MESSAGE_UNKNOWN_COMMAND);
     }
 
     @Test
@@ -467,8 +464,7 @@ public class LogicManagerTest {
         CommandResult result = logic.execute("unknown");
         assertEquals(DeleteCommand.MESSAGE_CANCELLED, result.getFeedbackToUser());
 
-        assertCommandException("confirm",
-                ConfirmDeleteCommand.MESSAGE_NO_PENDING_DELETION);
+        assertParseException("confirm", MESSAGE_UNKNOWN_COMMAND);
 
         assertTrue(model.hasPerson(AMY));
     }
@@ -497,9 +493,7 @@ public class LogicManagerTest {
         assertEquals(originalDisplayedPersons, model.getFilteredPersonList());
 
         // The failed confirmation must not remain reusable.
-        String expectedNoPendingDeletionMessage =
-                ConfirmDeleteCommand.MESSAGE_NO_PENDING_DELETION;
-        assertThrows(CommandException.class, expectedNoPendingDeletionMessage, () -> logic.execute("confirm"));
+        assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> logic.execute("confirm"));
 
         // A second confirmation must not change the restored data or displayed list.
         assertEquals(originalPersons, model.getInsureConnect().getPersonList());
