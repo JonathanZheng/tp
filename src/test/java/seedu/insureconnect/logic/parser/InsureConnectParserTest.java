@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 import seedu.insureconnect.logic.commands.AddCommand;
 import seedu.insureconnect.logic.commands.ClearCommand;
-import seedu.insureconnect.logic.commands.ConfirmDeleteCommand;
 import seedu.insureconnect.logic.commands.DeleteCommand;
 import seedu.insureconnect.logic.commands.EditCommand;
 import seedu.insureconnect.logic.commands.EditCommand.EditPersonDescriptor;
@@ -49,11 +48,9 @@ public class InsureConnectParserTest {
     }
 
     @Test
-    public void parseCommand_confirm() throws Exception {
-        assertTrue(parser.parseCommand("confirm") instanceof ConfirmDeleteCommand);
-
-        assertThrows(ParseException.class, String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                ConfirmDeleteCommand.MESSAGE_USAGE), () -> parser.parseCommand("confirm now"));
+    public void parseCommand_confirm_unknownCommand() throws Exception {
+        assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("confirm"));
+        assertThrows(ParseException.class, MESSAGE_UNKNOWN_COMMAND, () -> parser.parseCommand("confirm now"));
     }
 
     @Test
