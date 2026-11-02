@@ -481,7 +481,7 @@ The walkthrough below exercises the main features together. It complements the [
 
 ### Exercise the interface
 
-1. Enter `help`, check that the Help window shows command formats and the User Guide link, and click **Copy URL**. Paste into a text field to check the copied URL. Close Help with **Esc** or **F1**, then reopen it with the **Help** menu and F1. Try `userguide` to open the online guide in the default browser.
+1. Enter `help`, check that the Help window shows command formats and the User Guide link, and click **Copy URL**. Paste into a text field to check the copied URL. Close Help with **Esc** or **F1**, then reopen it with the **Help** menu and F1. Try `userguide` to open the bundled user guide.
 
 1. In the command box, type `lis` and press **Tab**.
 
