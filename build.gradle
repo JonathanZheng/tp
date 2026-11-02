@@ -117,7 +117,8 @@ tasks.register('checkOfflineGuide') {
             def actual = java.security.MessageDigest.getInstance('SHA-256')
                     .digest(file("docs/${relativePath}").bytes).encodeHex().toString()
             if (actual != expected) {
-                throw new GradleException('Offline guide is stale. Run python3 tools/generate_offline_guide.py')
+                throw new GradleException("Offline guide is stale: docs/${relativePath}. "
+                        + 'Run python3 tools/generate_offline_guide.py')
             }
         }
     }

@@ -354,7 +354,8 @@ InsureConnect saves its files relative to the working directory (the directory f
 Addresses already saved with more than 300 characters are loaded and preserved as-is. The 300-character limit applies to addresses entered with the `add` and `edit` commands.
 
 <div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
-If your changes make the data file invalid, InsureConnect starts with an empty contact list at the next run. The invalid file remains on disk until a successful `add`, `edit`, `delete`, or `clear` changes the customer records and saves them. Still, we recommend backing up the file before editing it.<br>
+If your changes make the data file invalid, InsureConnect displays a warning and starts with an empty customer list. The invalid file remains unchanged and cannot be overwritten by add, edit, delete, or clear; commands that attempt to save customer records will fail. To resume saving, close InsureConnect and repair, move, rename, or delete the invalid file before restarting. We recommend making a backup before editing the file.<br>
+
 Furthermore, certain edits can cause InsureConnect to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
 
