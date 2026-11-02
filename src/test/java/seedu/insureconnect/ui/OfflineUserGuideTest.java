@@ -55,6 +55,13 @@ public class OfflineUserGuideTest {
     }
 
     @Test
+    public void open_withBrowserOpener_extractsBundledGuide() throws Exception {
+        List<URI> opened = new ArrayList<>();
+        OfflineUserGuide.open(opened::add);
+        assertEquals(1, opened.size());
+    }
+
+    @Test
     public void open_browserUnavailable_reportsReadableFileLocation() throws Exception {
         Path guide = Files.writeString(tempDir.resolve("guide.html"), "guide");
         // EP: operating-system integration fails or is unavailable/restricted

@@ -20,7 +20,14 @@ final class OfflineUserGuide {
      * Opens a local copy of the guide in the default browser.
      */
     static void open() throws IOException {
-        open(extract(), OfflineUserGuide::browse);
+        open(extract(), uri -> Desktop.getDesktop().browse(uri));
+    }
+
+    /**
+     * Opens a local copy of the guide with a replacement browser integration.
+     */
+    static void open(BrowserOpener opener) throws IOException {
+        open(extract(), opener);
     }
 
     /**
@@ -55,16 +62,6 @@ final class OfflineUserGuide {
             Files.copy(source, guide, StandardCopyOption.REPLACE_EXISTING);
             return guide;
         }
-    }
-
-    /**
-     * Requests the operating system's browser integration.
-     */
-    private static void browse(URI uri) throws IOException {
-        if (!Desktop.isDesktopSupported() || !Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
-            throw new IOException("Desktop browsing is not supported.");
-        }
-        Desktop.getDesktop().browse(uri);
     }
 
     /**
