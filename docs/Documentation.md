@@ -30,7 +30,7 @@ title: Documentation guide
 
 **Maintaining the offline User Guide:**
 
-* The `userguide` command opens a self-contained HTML copy bundled in the JAR.
+* The `userguide` (`ug`) command opens a self-contained HTML copy bundled in the JAR.
 * After editing `docs/UserGuide.md` or its screenshots, regenerate the copy:
   ```sh
   python3 -m pip install Markdown==3.7
