@@ -151,7 +151,7 @@ These rules apply when adding a customer or changing a field with `edit`:
 ### Viewing help: `help`
 
 Opens the Help window. It lists the formats for `add`, `edit`, `delete`, `find`, `list`, `resize`, `clear`, `help`, `userguide` (`ug`), and `exit`.
-The window also shows a link to this User Guide; click **Copy URL** to copy the link to your clipboard.
+The window explains how to open the offline guide using `userguide`. Click **Copy URL** to copy the online guide link to your clipboard.
 
 You can open the same window from the **Help** menu or by pressing **F1**.
 Press **F1** again or **Esc** to close the Help window while the Help window is focused.
@@ -163,7 +163,9 @@ Format: `help`
 
 ### Opening the User Guide: `userguide`
 
-Opens the online User Guide in your default web browser. For faster command-line use, `ug` can be used as a short form of `userguide`.
+Opens the complete bundled User Guide in your default web browser. The guide and its screenshots work without an internet connection. External links, such as downloads, still require internet access. For faster command-line use, `ug` can be used as a short form of `userguide`.
+
+If the browser cannot be opened automatically, the error message gives the local guide file path. Open that file in a browser before closing InsureConnect; the temporary copy is removed when the app exits.
 
 Format: `userguide` or `ug`
 
