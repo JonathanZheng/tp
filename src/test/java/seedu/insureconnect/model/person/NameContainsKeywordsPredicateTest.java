@@ -159,4 +159,23 @@ public class NameContainsKeywordsPredicateTest {
         // EP: no keywords
         assertFalse(new NameContainsKeywordsPredicate(List.of()).hasExactMatch(person)); // boundary value
     }
+
+    @Test
+    public void canonicallyEquivalentAccentedNames_matchForPrefixAndExactSearch() {
+        String precomposedName = "José";
+        String decomposedName = "Jose\u0301";
+
+        Person precomposedPerson = new PersonBuilder().withName(precomposedName).build();
+        Person decomposedPerson = new PersonBuilder().withName(decomposedName).build();
+
+        NameContainsKeywordsPredicate precomposedPredicate =
+                new NameContainsKeywordsPredicate(List.of(precomposedName));
+        NameContainsKeywordsPredicate decomposedPredicate =
+                new NameContainsKeywordsPredicate(List.of(decomposedName));
+
+        assertTrue(precomposedPredicate.test(decomposedPerson));
+        assertTrue(decomposedPredicate.test(precomposedPerson));
+        assertTrue(precomposedPredicate.hasExactMatch(decomposedPerson));
+        assertTrue(decomposedPredicate.hasExactMatch(precomposedPerson));
+    }
 }
