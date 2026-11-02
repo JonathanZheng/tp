@@ -159,4 +159,32 @@ public class NameContainsKeywordsPredicateTest {
         // EP: no keywords
         assertFalse(new NameContainsKeywordsPredicate(List.of()).hasExactMatch(person)); // boundary value
     }
+
+    @Test
+    public void canonicallyEquivalentAccentedNames_matchForPrefixAndExactSearch() {
+        String precomposedName = "José";
+        String decomposedName = "Jose\u0301";
+
+        Person precomposedPerson = new PersonBuilder().withName(precomposedName).build();
+        Person decomposedPerson = new PersonBuilder().withName(decomposedName).build();
+
+        NameContainsKeywordsPredicate precomposedPredicate =
+                new NameContainsKeywordsPredicate(List.of(precomposedName));
+        NameContainsKeywordsPredicate decomposedPredicate =
+                new NameContainsKeywordsPredicate(List.of(decomposedName));
+        NameContainsKeywordsPredicate unaccentedPredicate =
+                new NameContainsKeywordsPredicate(List.of("Jose"));
+
+        // EP: precomposed keyword matches a canonically equivalent decomposed name
+        assertTrue(precomposedPredicate.test(decomposedPerson));
+        assertTrue(precomposedPredicate.hasExactMatch(decomposedPerson));
+
+        // EP: decomposed keyword matches a canonically equivalent precomposed name
+        assertTrue(decomposedPredicate.test(precomposedPerson));
+        assertTrue(decomposedPredicate.hasExactMatch(precomposedPerson));
+
+        // EP: an unaccented keyword does not match an accented name
+        assertFalse(unaccentedPredicate.test(precomposedPerson)); // boundary value
+        assertFalse(unaccentedPredicate.hasExactMatch(precomposedPerson)); // boundary value
+    }
 }
