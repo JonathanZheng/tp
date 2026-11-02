@@ -424,86 +424,91 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ## **Appendix: Instructions for manual testing**
 
-Given below are instructions to test the app manually.
+The walkthrough below exercises the main features together. It complements the [User Guide](UserGuide.md), which describes command formats and field constraints in detail. Continue with exploratory testing after completing the path.
 
-<div markdown="span" class="alert alert-info">:information_source: **Note:** These instructions only provide a starting point for testers to work on;
-testers are expected to do more *exploratory* testing.
+### Prepare an isolated working folder
 
-</div>
+1. Create a new, empty folder for this test run and copy `insureconnect.jar` into it. Open a terminal in that folder and launch the app with `java -jar insureconnect.jar`. Use this same folder for every relaunch; InsureConnect stores `data/addressbook.json` and `preferences.json` relative to the launch folder.
 
-### Launch and shutdown
+   **Expected:** The app opens with no customers. A missing data file is treated as an empty list.
 
-1. Initial launch
+1. Add three customers using the following commands:
 
-   1. Download the JAR file and copy it into an empty folder.
+   ```text
+   add n/Alice Tan p/91234567 e/alice.tan@example.com a/10 Test Street t/LIFE20001 t/HEALTH20001 r/Call after 6pm
+   add n/Bob Lim p/81234567 e/bob.lim@example.com a/20 Sample Road t/MOTOR20002
+   add n/Caroline Ng p/98765432 e/caroline.ng@example.com a/30 Sample Crescent t/TRAVEL20003
+   ```
 
-   1. Double-click the JAR file.<br>
-      Expected: The GUI opens with an empty address book. The window size may not be optimal.
+   **Expected:** Each customer appears once in the list. Press F6 twice to focus the customer list. Selecting a customer with Up/Down updates the details panel. Alice has two policies and a remark; the other remarks are empty.
 
-1. Saving window preferences
+### Exercise commands and customer records
 
-   1. Resize the window to an optimal size. Move the window to a different location. Close the window.
+1. Try `list` and `list n/`. While the name sort is active, add one more customer, then run `list n/`, `list c/`, and `list`:
 
-   1. Relaunch the app by double-clicking the JAR file.<br>
-       Expected: The most recent window size and location are retained.
+   ```text
+   add n/Aaron Goh p/87776666 e/aaron.goh@example.com a/40 Example Walk t/LIFE20004
+   ```
 
-1. _{ more test cases …​ }_
+   **Expected:** `list` restores insertion order, `list n/` sorts by name, and `list c/` sorts by creation time. Aaron appears first in name order and last in insertion and creation-time order. Adding a customer preserves the active sort.
 
-### Viewing help
+1. Try `find Ali`, `find p/912`, `find t/life20001`, and `find n/Alice p/912 t/LIFE20001`, then run `list`.
 
-1. Opening the Help window
+   **Expected:** The searches find Alice by name prefix, phone prefix, and case-insensitive exact policy number. The combined search returns Alice only. A new search replaces the previous filter; `list` restores all four customers.
 
-   1. Test case: Enter `help`.<br>
-      Expected: The Help window opens with formats for all ten commands and a link to the User Guide.
+1. Try this duplicate, then edit Alice (the first customer after `list`) and check the details panel:
 
-   1. Test case: Click **Copy URL**.<br>
-      Expected: The User Guide URL is copied to the clipboard.
+   ```text
+   add n/Alice Tan p/91234567 e/another@example.com a/40 Test Avenue t/LIFE20999
+   edit 1 r/Follow up next week
+   edit 1 e/alice.updated@example.com
+   edit 1 r/
+   ```
 
-   1. Test case: Close the Help window, then open it using the Help menu or F1.<br>
-      Expected: The same Help window content appears.
+   **Expected:** The duplicate is rejected and the list is unchanged. The remark is set, remains after editing the email, and is then cleared. The policy numbers remain Alice's original two because they were omitted from the edits.
 
-### Deleting a person
+1. Try `delete 2`, then enter `n`. Repeat `delete 2`, then enter `y`.
 
-1. Deleting a person while all persons are being shown
+   **Expected:** The first response cancels deletion and Bob remains. The second confirms deletion and Bob is removed. Confirmation responses are `y` or `n`; any other response cancels.
 
-   1. Prerequisites: List all persons using the `list` command, with multiple persons in the list.
+1. Try `clear`, then enter `n`.
 
-   1. Test case: `delete 1`<br>
-      Expected: No contact is deleted. The status message requests confirmation by entering `confirm`.
+   **Expected:** The clear is cancelled and all remaining customers stay in the list.
 
-   1. Test case: `confirm`<br>
-      Expected: The first contact is deleted from the list. The status message shows the deleted contact's details.
+### Exercise the interface
 
-   1. Test case: `delete 0`<br>
-      Expected: No person is deleted. The status message shows error details.
+1. Enter `help`, check that the Help window shows command formats and the User Guide link, and click **Copy URL**. Paste into a text field to check the copied URL. Close Help with **Esc** or **F1**, then reopen it with the **Help** menu and F1. Try `userguide` to open the online guide in the default browser.
 
-   1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
-      Expected: Similar to previous.
+1. In the command box, type `lis` and press **Tab**.
 
-1. _{ more test cases …​ }_
+   **Expected:** The suggestion completes the command word to `list`; press Enter to run it. Submit a few different commands, type an unfinished draft, then use Up/Down to recall earlier commands and return to the draft. History lasts for the current app session.
 
-### Editing a remark
+1. Press **F6** repeatedly to cycle through the command box, output box, and customer list; use **Shift+F6** to cycle backward. Check that a partially typed command is retained. In the output box, select feedback text and use the system copy shortcut. In the customer list, use Up/Down to change the selected customer. If the list is longer than the visible area, use Page Up/Page Down to browse it.
 
-1. Set, preserve, and clear a remark
+1. Switch between light and dark with **View → Colour scheme** and F2, including while Help is open. Try `resize p/min`, `resize p/med`, `resize p/max`, and `resize s/1000 700` if that size fits your screen; otherwise use a custom size that fits.
 
-   1. Prerequisites: List all persons using `list`, with at least one person in the list.
+   **Expected:** The selected colour scheme applies to the main and Help windows. Resize commands change the main window and keep it within the usable screen area; a custom size must fit the current screen.
 
-   1. Test case: `edit 1 r/Follow up next week`<br>
-      Expected: The first person's remark becomes `Follow up next week`.
+### Check persistence after relaunch
 
-   1. Test case: `edit 1 e/updated@example.com`<br>
-      Expected: The email changes and the remark remains `Follow up next week`.
+1. Before the final `clear`, note the customer list, choose a colour scheme, resize and move the window, then enter `exit`. Relaunch from the same working folder.
 
-   1. Test case: `edit 1 r/`<br>
-      Expected: The first person's remark becomes empty.
+   **Expected:** The customer records, window size and location, and colour scheme are restored. Customer records are saved after successful changes; the app does not save them at a confirmation prompt or after a cancelled operation.
 
-   1. Test case: `edit 1 r/` followed by 501 characters<br>
-      Expected: The edit is rejected because the remark exceeds 500 characters.
+### Optional data-file checks
 
-### Saving data
+These checks involve editing files directly. Perform them only in the isolated test folder, and copy `data/addressbook.json` to a backup before changing it.
 
-1. Dealing with missing/corrupted data files
+1. **Legacy record:** With the app closed, edit the saved JSON and remove the `createdAt` property from one customer object without changing its other fields. Relaunch the app and run `list c/`.
 
-   1. _{Explain how to simulate missing or corrupted data files and state the expected behavior.}_
+   **Expected:** The customer loads. A missing creation time is treated as `1970-01-01T00:00:00Z`, so that customer appears before records with current creation times. Loading alone does not rewrite the file. Edit that customer and check the saved JSON; the creation time is then written as the epoch timestamp. Close the app and restore the valid backup.
 
-1. _{ more test cases …​ }_
+1. **Corrupted file:** Make `data/addressbook.json` invalid JSON (for example, replace its contents with `{ invalid`) and relaunch the app.
+
+   **Expected:** A warning appears and the app starts with an empty customer list. Try `add n/Test User p/87654321 e/test.user@example.com a/50 Sample Street t/LIFE20999`; the save fails, the list remains empty, and the invalid file is not overwritten. Close the app and restore the valid backup.
+
+### Finish the walkthrough
+
+1. Relaunch with the restored customer data, run `clear`, and enter `y`.
+
+   **Expected:** All customers are removed and `list` shows an empty list. The working folder is disposable, so clearing its records is safe.
