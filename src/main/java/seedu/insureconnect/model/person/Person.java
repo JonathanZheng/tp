@@ -2,6 +2,7 @@ package seedu.insureconnect.model.person;
 
 import static seedu.insureconnect.commons.util.CollectionUtil.requireAllNonNull;
 
+import java.text.Normalizer;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashSet;
@@ -81,7 +82,8 @@ public class Person {
     }
 
     /**
-     * Returns true if both persons have the same name (ignoring case and extra spaces) and phone number.
+     * Returns true if both persons have the same name (ignoring case, extra spaces, and canonical Unicode
+     * differences) and phone number.
      * This defines a weaker notion of equality between two persons.
      */
     public boolean isSamePerson(Person otherPerson) {
@@ -95,10 +97,12 @@ public class Person {
     }
 
     /**
-     * Returns the name with surrounding spaces removed and repeated spaces collapsed.
+     * Returns the name with surrounding spaces removed, repeated spaces collapsed, and canonically equivalent
+     * Unicode sequences normalized to NFC.
      */
     private String getNormalizedName() {
-        return name.fullName.trim().replaceAll(" +", " ");
+        String nameWithNormalizedSpaces = name.fullName.trim().replaceAll(" +", " ");
+        return Normalizer.normalize(nameWithNormalizedSpaces, Normalizer.Form.NFC);
     }
 
     /**

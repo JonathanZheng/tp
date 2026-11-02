@@ -88,6 +88,21 @@ public class AddCommandIntegrationTest {
     }
 
     @Test
+    public void execute_canonicallyEquivalentNameAndSamePhone_throwsCommandException() {
+        Person original = new PersonBuilder().withName("José").withPhone("81234567")
+                .withTags("NFC1").build();
+        model.addPerson(original);
+        Person decomposedName = new PersonBuilder(original).withName("Jose\u0301")
+                .withEmail("different@example.com").withTags("NFC2").build();
+
+        int displayedIndex = model.getFilteredPersonList().indexOf(original) + 1;
+        // EP: canonically equivalent name and matching phone is rejected despite other fields differing
+        assertCommandFailure(new AddCommand(decomposedName), model,
+                String.format(AddCommand.MESSAGE_DUPLICATE_PERSON, displayedIndex,
+                        original.getName().fullName, original.getPhone().value));
+    }
+
+    @Test
     public void execute_duplicatePersonHiddenByFilter_clearsFilterAndReportsDisplayedIndex() {
         Person duplicate = model.getInsureConnect().getPersonList().get(0);
         model.updatePersonListComparator((first, second) -> second.getName().fullName
