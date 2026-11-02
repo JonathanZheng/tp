@@ -102,6 +102,32 @@ public class MainAppTest extends GuiTest {
     }
 
     @Test
+    public void init_nullTags_preservesCustomerFileAndShowsWarning() throws Exception {
+        new JsonInsureConnectStorage(dataPath()).saveInsureConnect(getTypicalInsureConnect());
+        String invalidData = Files.readString(dataPath()).replaceFirst(
+                "\"tags\"\\s*:\\s*\\[[^\\]]*\\]",
+                "\"tags\" : null");
+        Files.writeString(dataPath(), invalidData);
+
+        MainApp app = newApplication();
+        app.init();
+
+        String warning = String.format(MainApp.MESSAGE_DATA_FILE_ERROR, dataPath());
+        assertEquals(warning, app.initialFeedback);
+        assertEquals(new InsureConnect(), app.model.getInsureConnect());
+        assertEquals(invalidData, Files.readString(dataPath()));
+
+        runOnFxThread(() -> {
+            Stage stage = new Stage();
+            assertDoesNotThrow(() -> app.start(stage));
+            assertTrue(stage.isShowing());
+
+            TextArea feedback = (TextArea) stage.getScene().lookup("#resultDisplay");
+            assertEquals(warning, feedback.getText());
+        });
+    }
+
+    @Test
     public void stop_savesLatestPreferencesForNextLaunch() throws Exception {
         MainApp app = newApplication();
         app.init();

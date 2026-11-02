@@ -2,7 +2,6 @@ package seedu.insureconnect.storage;
 
 import java.time.Instant;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +30,7 @@ class JsonAdaptedPerson {
     private final String phone;
     private final String email;
     private final String address;
-    private final List<JsonAdaptedTag> tags = new ArrayList<>();
+    private final List<JsonAdaptedTag> tags;
     private final String remark;
     private final String createdAt;
 
@@ -47,9 +46,7 @@ class JsonAdaptedPerson {
         this.phone = phone;
         this.email = email;
         this.address = address;
-        if (tags != null) {
-            this.tags.addAll(tags);
-        }
+        this.tags = tags;
         this.remark = remark;
         this.createdAt = createdAt;
     }
@@ -62,9 +59,10 @@ class JsonAdaptedPerson {
         phone = source.getPhone().value;
         email = source.getEmail().value;
         address = source.getAddress().value;
-        tags.addAll(source.getTags().stream()
-                .map(JsonAdaptedTag::new)
-                .collect(Collectors.toList()));
+        tags = source.getTags()
+            .stream()
+            .map(JsonAdaptedTag::new)
+            .collect(Collectors.toList());
         remark = source.getRemark().value;
         createdAt = source.getCreatedAt().toString();
     }
@@ -135,6 +133,9 @@ class JsonAdaptedPerson {
      * Restores policy numbers and requires at least one policy.
      */
     private Set<Tag> readTags() throws IllegalValueException {
+        if (tags == null) {
+            throw new IllegalValueException(Person.MESSAGE_MISSING_POLICY_NUMBER);
+        }
         final Set<Tag> modelTags = new HashSet<>();
         for (JsonAdaptedTag tag : tags) {
             modelTags.add(tag.toModelType());
