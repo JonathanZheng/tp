@@ -33,6 +33,7 @@ CLAUDE.md
 
 # Temp files
 _temp/
+output/
 
 # Build outputs
 bin/

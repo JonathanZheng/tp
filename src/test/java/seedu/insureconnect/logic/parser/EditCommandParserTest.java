@@ -1,6 +1,5 @@
 package seedu.insureconnect.logic.parser;
 
-import static seedu.insureconnect.logic.Messages.MESSAGE_INVALID_COMMAND_FORMAT;
 import static seedu.insureconnect.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.insureconnect.logic.commands.CommandTestUtil.ADDRESS_DESC_BOB;
 import static seedu.insureconnect.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
@@ -31,6 +30,7 @@ import static seedu.insureconnect.logic.parser.CliSyntax.PREFIX_REMARK;
 import static seedu.insureconnect.logic.parser.CliSyntax.PREFIX_TAG;
 import static seedu.insureconnect.logic.parser.CommandParserTestUtil.assertParseFailure;
 import static seedu.insureconnect.logic.parser.CommandParserTestUtil.assertParseSuccess;
+import static seedu.insureconnect.logic.parser.ParserUtil.MESSAGE_INVALID_INDEX;
 import static seedu.insureconnect.testutil.TypicalIndexes.INDEX_FIRST_PERSON;
 import static seedu.insureconnect.testutil.TypicalIndexes.INDEX_SECOND_PERSON;
 import static seedu.insureconnect.testutil.TypicalIndexes.INDEX_THIRD_PERSON;
@@ -53,36 +53,32 @@ public class EditCommandParserTest {
 
     private static final String TAG_EMPTY = " " + PREFIX_TAG;
 
-    private static final String MESSAGE_INVALID_FORMAT =
-            String.format(MESSAGE_INVALID_COMMAND_FORMAT, EditCommand.MESSAGE_USAGE);
-
     private EditCommandParser parser = new EditCommandParser();
 
     @Test
     public void parse_missingParts_failure() {
         // no index specified
-        assertParseFailure(parser, VALID_NAME_AMY, MESSAGE_INVALID_FORMAT);
-
+        assertParseFailure(parser, VALID_NAME_AMY, MESSAGE_INVALID_INDEX);
         // no field specified
         assertParseFailure(parser, "1", EditCommand.MESSAGE_NOT_EDITED);
 
         // no index and no field specified
-        assertParseFailure(parser, "", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "", MESSAGE_INVALID_INDEX);
     }
 
     @Test
     public void parse_invalidPreamble_failure() {
         // negative index
-        assertParseFailure(parser, "-5" + NAME_DESC_AMY, MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "-5" + NAME_DESC_AMY, MESSAGE_INVALID_INDEX);
 
         // zero index
-        assertParseFailure(parser, "0" + NAME_DESC_AMY, MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "0" + NAME_DESC_AMY, MESSAGE_INVALID_INDEX);
 
         // invalid arguments being parsed as preamble
-        assertParseFailure(parser, "1 some random string", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "1 some random string", MESSAGE_INVALID_INDEX);
 
         // invalid prefix being parsed as preamble
-        assertParseFailure(parser, "1 i/ string", MESSAGE_INVALID_FORMAT);
+        assertParseFailure(parser, "1 i/ string", MESSAGE_INVALID_INDEX);
     }
 
     @Test
@@ -146,6 +142,13 @@ public class EditCommandParserTest {
         // name with escape character
         userInput = targetIndex.getOneBased() + " n/Mohd !a/l Kassim";
         descriptor = new EditPersonDescriptorBuilder().withName("Mohd a/l Kassim").build();
+        expectedCommand = new EditCommand(targetIndex, descriptor);
+        assertParseSuccess(parser, userInput, expectedCommand);
+
+        // EP: name uses precomposed and decomposed Latin accents with a curly apostrophe
+        String unicodeName = "José O\u0308zdemir D’Angelo";
+        userInput = targetIndex.getOneBased() + " n/" + unicodeName;
+        descriptor = new EditPersonDescriptorBuilder().withName(unicodeName).build();
         expectedCommand = new EditCommand(targetIndex, descriptor);
         assertParseSuccess(parser, userInput, expectedCommand);
 

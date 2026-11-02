@@ -11,7 +11,6 @@ import seedu.insureconnect.commons.core.LogsCenter;
 import seedu.insureconnect.logic.commands.AddCommand;
 import seedu.insureconnect.logic.commands.ClearCommand;
 import seedu.insureconnect.logic.commands.Command;
-import seedu.insureconnect.logic.commands.ConfirmDeleteCommand;
 import seedu.insureconnect.logic.commands.DeleteCommand;
 import seedu.insureconnect.logic.commands.EditCommand;
 import seedu.insureconnect.logic.commands.ExitCommand;
@@ -65,13 +64,6 @@ public class InsureConnectParser {
             case ExitCommand.COMMAND_WORD -> new ExitCommand();
             case HelpCommand.COMMAND_WORD -> new HelpCommand();
             case UserGuideCommand.COMMAND_WORD -> new UserGuideCommand();
-            case ConfirmDeleteCommand.COMMAND_WORD -> {
-                if (!arguments.trim().isEmpty()) {
-                    throw new ParseException(String.format(MESSAGE_INVALID_COMMAND_FORMAT,
-                            ConfirmDeleteCommand.MESSAGE_USAGE));
-                }
-                yield new ConfirmDeleteCommand();
-            }
             default -> {
                 logger.finer("This user input caused a ParseException: " + userInput);
                 throw new ParseException(MESSAGE_UNKNOWN_COMMAND);

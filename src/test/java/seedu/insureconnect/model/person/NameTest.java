@@ -42,6 +42,14 @@ public class NameTest {
         assertFalse(Name.isValidName(".Tan")); // starts with period
         assertFalse(Name.isValidName("/Mary")); // starts with slash
         assertFalse(Name.isValidName("!Zoe")); // starts with exclamation mark
+        // EP: names with non-Latin letters are unsupported
+        assertFalse(Name.isValidName("张三"));
+        // EP: names containing emoji are unsupported
+        assertFalse(Name.isValidName("José😀"));
+        // EP: names containing unrelated symbols are unsupported
+        assertFalse(Name.isValidName("Jos@e"));
+        // EP: a combining mark cannot start a name
+        assertFalse(Name.isValidName("\u0301Jose"));
 
         // valid name
         assertTrue(Name.isValidName("peter jack")); // alphabets only
@@ -64,6 +72,12 @@ public class NameTest {
         assertTrue(Name.isValidName("Siti a/p Ahmad")); // Malaysian name with a/p
         assertTrue(Name.isValidName("Tan a/k/a Teck")); // with a/k/a
         assertTrue(Name.isValidName("Zoe !")); // with exclamation mark
+        // EP: precomposed Latin letters with accents
+        assertTrue(Name.isValidName("José Özdemir"));
+        // EP: decomposed Latin letters followed by combining accent marks
+        assertTrue(Name.isValidName("Jose\u0301 O\u0308zdemir"));
+        // EP: curly apostrophe used in a legal name
+        assertTrue(Name.isValidName("D’Angelo"));
     }
 
     @Test

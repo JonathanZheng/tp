@@ -25,7 +25,7 @@ public class CommandFormats {
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
-            + "[" + PREFIX_TAG + "POLICY_NUMBER]..."
+            + "[" + PREFIX_TAG + "POLICY_NUMBER]... "
             + "[" + PREFIX_REMARK + "REMARK]";
 
     public static final String DELETE_COMMAND_FORMAT = DeleteCommand.COMMAND_WORD + " INDEX";

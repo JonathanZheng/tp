@@ -64,12 +64,36 @@ public class AddCommandParserTest {
                 NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 new AddCommand(expectedPersonMultipleTags));
     }
+    @Test
+    public void parse_policyNumberWithSeparators_success() {
+        // EP: policy number with supported hyphen and slash separators
+        String policyNumber = "LIFE-2026/SG";
+        Person expectedPerson = new PersonBuilder(BOB)
+                .withTags(policyNumber)
+                .build();
+
+        assertParseSuccess(parser,
+                NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB
+                        + ADDRESS_DESC_BOB + " t/" + policyNumber,
+                new AddCommand(expectedPerson));
+    }
 
     @Test
     public void parse_nameWithEscapedPrefix_success() {
         Person expectedPerson = new PersonBuilder(BOB).withName("Mohd a/l Kassim")
                 .withTags(VALID_TAG_FRIEND).build();
         assertParseSuccess(parser, " n/Mohd !a/l Kassim " + PHONE_DESC_BOB + EMAIL_DESC_BOB
+                + ADDRESS_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedPerson));
+    }
+
+    @Test
+    public void parse_nameWithAccents_success() {
+        String unicodeName = "José O\u0308zdemir D’Angelo";
+        Person expectedPerson = new PersonBuilder(BOB).withName(unicodeName)
+                .withTags(VALID_TAG_FRIEND).build();
+
+        // EP: name uses precomposed and decomposed Latin accents with a curly apostrophe
+        assertParseSuccess(parser, " n/" + unicodeName + " " + PHONE_DESC_BOB + EMAIL_DESC_BOB
                 + ADDRESS_DESC_BOB + TAG_DESC_FRIEND, new AddCommand(expectedPerson));
     }
 
@@ -216,7 +240,12 @@ public class AddCommandParserTest {
                 + ADDRESS_DESC_BOB + TAG_DESC_HUSBAND + TAG_DESC_FRIEND,
                 expectedFormatError("Unexpected text before the first field: \"" + PREAMBLE_NON_EMPTY.trim()
                         + "\"."));
+
+        // EP: policy number containing prohibited whitespace
+        assertParseFailure(parser, NAME_DESC_BOB + PHONE_DESC_BOB + EMAIL_DESC_BOB + ADDRESS_DESC_BOB
+                        + " t/POLICY 123", "Invalid policy number: " + Tag.MESSAGE_CONSTRAINTS);
     }
+
 
     @Test
     public void parse_emptyRequiredField_failure() {
