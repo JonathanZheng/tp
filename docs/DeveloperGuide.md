@@ -10,6 +10,7 @@ title: Developer Guide
 ## **Acknowledgements**
 
 * This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
+* OpenAI Codex was used to explain the codebase and assist with drafting, reviewing, and testing implementation changes. All AI-assisted suggestions were reviewed, adapted, and tested by the team.
 
 --------------------------------------------------------------------------------------------------------------------
 
