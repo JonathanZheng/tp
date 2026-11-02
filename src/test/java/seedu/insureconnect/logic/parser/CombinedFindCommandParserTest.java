@@ -83,7 +83,7 @@ public class CombinedFindCommandParserTest {
         // EP: empty or invalid phone and policy values
         assertParseFailure(parser, "n/Alice p/", PhoneStartsWithPredicate.MESSAGE_CONSTRAINTS);
         assertParseFailure(parser, "n/Alice t/", Tag.MESSAGE_CONSTRAINTS);
-        assertParseFailure(parser, "n/Alice t/LIFE-1", Tag.MESSAGE_CONSTRAINTS);
+        assertParseFailure(parser, "n/Alice t/LIFE_1", Tag.MESSAGE_CONSTRAINTS);
         assertParseFailure(parser, "t/" + "A".repeat(31), Tag.MESSAGE_CONSTRAINTS); // boundary value
     }
 

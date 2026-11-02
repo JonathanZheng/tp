@@ -418,7 +418,7 @@ Detailed policy information (US08), policy renewal and status features (US16-US1
 * **Agent**: An insurance agent or financial adviser who sells insurance policies and uses InsureConnect to manage their customers
 * **Customer**: A person whose details are recorded in InsureConnect, who holds at least one insurance policy sold by the agent
 * **Policy**: An insurance contract held by a customer, such as a life, health, motor or travel insurance plan
-* **Policy number**: The unique code that identifies a policy, made up of 1 to 30 letters and digits (e.g. `LIFE20481`). Every customer has at least one, and no two customers can share the same policy number. Entered with the `t/` prefix
+* **Policy number**: The unique code that identifies a policy, made up of 1 to 30 characters with at least one letter or digit; hyphens and slashes are also allowed (e.g. `LIFE-2026/SG`). Every customer has at least one, and no two customers can share the same policy number. Entered with the `t/` prefix
 * **Remark**: An optional free text note attached to a customer, used for follow-ups and preferences (e.g. `Prefers WhatsApp after 6pm`). The `r/` prefix sets it, and `edit INDEX r/` clears it. An omitted remark is stored as an empty string when adding a customer
 * **Duplicate customer**: A customer whose name and phone number match those of an existing customer. Name matching ignores case and extra spaces. Phone matching ignores a leading `+`; for Singapore numbers, the `65` country code is also ignored when comparing it with an 8-digit local number
 * **Prefix matching**: The way `find` compares keywords with names: a keyword matches a name if any word in the name starts with the keyword, ignoring case (e.g. `wei` matches `Tan Wei Ming`, but `ei` does not)
