@@ -238,13 +238,13 @@ public class MainWindowTest extends GuiTest {
             logic.setExecutor(command -> new CommandResult("Opening User Guide",
                     false, false, false, true, null));
             MainWindow window = createWindow(logic, () -> {
-                throw new IOException("Browser unavailable");
+                throw new IOException("Open the local guide at /tmp/guide.html");
             });
 
             // EP: browser cannot open the User Guide
             submit(window, "userguide");
 
-            assertEquals("Unable to open the User Guide in your browser.", outputOf(window).getText());
+            assertEquals("Open the local guide at /tmp/guide.html", outputOf(window).getText());
             assertEquals("userguide", inputOf(window).getText());
         });
     }

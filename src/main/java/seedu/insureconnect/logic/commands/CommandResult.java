@@ -23,7 +23,7 @@ public class CommandResult {
     private final boolean confirmationRequired;
     private final WindowResize windowResize;
 
-    /** The online User Guide should be opened in the default browser. */
+    /** The offline User Guide should be opened in the default browser. */
     private final boolean shouldOpenUserGuide;
 
     /**

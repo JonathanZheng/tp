@@ -1,1 +1,4 @@
 *.pdf binary
+*.md text eol=lf
+*.html text eol=lf
+*.sha256 text eol=lf

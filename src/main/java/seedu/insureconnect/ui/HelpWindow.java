@@ -20,7 +20,7 @@ import seedu.insureconnect.logic.commands.CommandFormats;
 public class HelpWindow extends UiPart<Stage> {
 
     public static final String USERGUIDE_URL = "https://AY2627S1-CS2103T-W09-4.github.io/tp/UserGuide.html";
-    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
+    public static final String HELP_MESSAGE = "Offline guide: type userguide. Copy URL for the online guide.";
 
     private static final String COMMAND_FORMATS = String.join("\n\n",
             CommandFormats.ADD_COMMAND_FORMAT,
