@@ -454,7 +454,7 @@ testers are expected to do more *exploratory* testing.
 1. Opening the Help window
 
    1. Test case: Enter `help`.<br>
-      Expected: The Help window opens with formats for all eight commands and a link to the User Guide.
+      Expected: The Help window opens with formats for all ten commands and a link to the User Guide.
 
    1. Test case: Click **Copy URL**.<br>
       Expected: The User Guide URL is copied to the clipboard.
