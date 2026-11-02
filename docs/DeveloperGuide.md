@@ -100,7 +100,7 @@ Here's a (partial) class diagram of the `Logic` component:
 
 <img src="images/LogicClassDiagram.png" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` followed by `execute("confirm")` API calls as an example.
+The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` followed by a confirmation response such as `execute("y")` as an example.
 
 ![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
 
@@ -469,9 +469,9 @@ testers are expected to do more *exploratory* testing.
    1. Prerequisites: List all persons using the `list` command, with multiple persons in the list.
 
    1. Test case: `delete 1`<br>
-      Expected: No contact is deleted. The status message requests confirmation by entering `confirm`.
+      Expected: No contact is deleted. The status message requests confirmation by entering `y`.
 
-   1. Test case: `confirm`<br>
+   1. Test case: `y`<br>
       Expected: The first contact is deleted from the list. The status message shows the deleted contact's details.
 
    1. Test case: `delete 0`<br>
