@@ -43,7 +43,8 @@ public class EditCommand extends Command {
             + PREFIX_EMAIL + "johndoe@example.com";
 
     public static final String MESSAGE_EDIT_PERSON_SUCCESS = "Edited customer: %1$s";
-    public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.";
+    public static final String MESSAGE_NOT_EDITED = "At least one field to edit must be provided.\n"
+            + "Format: " + EDIT_COMMAND_FORMAT + " (INDEX must be a positive integer)";
     public static final String MESSAGE_DUPLICATE_PERSON = "This customer already exists in InsureConnect.";
 
     private final Index index;
