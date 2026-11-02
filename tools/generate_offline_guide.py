@@ -56,9 +56,9 @@ External links, such as downloads and Java installation instructions, require in
 """ + rendered + "\n</body>\n</html>\n"
 output = DOCS / "offline"
 output.mkdir(exist_ok=True)
-(output / "UserGuide.html").write_text(page, encoding="utf-8")
+(output / "UserGuide.html").write_bytes(page.encode("utf-8"))
 inputs.add("offline/UserGuide.html")
 manifest = "".join(f"{hashlib.sha256((DOCS / name).read_bytes()).hexdigest()}  {name}\n"
                    for name in sorted(inputs))
-(output / "sources.sha256").write_text(manifest, encoding="utf-8")
+(output / "sources.sha256").write_bytes(manifest.encode("utf-8"))
 print("Generated docs/offline/UserGuide.html with embedded screenshots.")

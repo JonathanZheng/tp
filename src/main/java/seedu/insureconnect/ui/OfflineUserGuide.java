@@ -65,7 +65,7 @@ final class OfflineUserGuide {
     }
 
     /**
-     * Allows browser integration to be replaced in tests.
+     * Opens a URI in a browser.
      */
     @FunctionalInterface
     interface BrowserOpener {
