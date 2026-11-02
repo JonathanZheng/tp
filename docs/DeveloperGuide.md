@@ -10,9 +10,14 @@ title: Developer Guide
 ## **Acknowledgements**
 
 * This project is based on the AddressBook-Level3 project created by the [SE-EDU initiative](https://se-education.org).
+* The offline User Guide generator uses [Python-Markdown 3.7](https://python-markdown.github.io/) to convert Markdown to HTML. It is a documentation-generation dependency and is not required at application runtime.
 
 Notable uses of AI:
-* OpenAI Codex was used to explain the codebase and assist with drafting, reviewing, and testing implementation changes. All AI-assisted suggestions were reviewed, adapted, and tested by the team.
+
+* OpenAI Codex and Claude Code were used to assist with implementation, tests, debugging and documentation.
+* All AI-generated output was reviewed and appropriately adapted before use.
+* @JonathanZheng used OpenAI Codex for preliminary PR reviews and to implement and test the offline User Guide.
+* @BenjaminWong33 used OpenAI Codex to explain the codebase, generate ideas, assist with debugging and testing, and suggest implementation approaches.
 * @denzelgoo used OpenAI Codex to assist with idea generation, as well as planning and drafting implementation changes. OpenAI Codex was also used to review the accuracy of documentation against the actual implementation and behaviours of the application.
 
 --------------------------------------------------------------------------------------------------------------------
@@ -104,7 +109,7 @@ Here's a (partial) class diagram of the `Logic` component:
 
 <img src="images/LogicClassDiagram.png" width="550"/>
 
-The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` followed by `execute("confirm")` API calls as an example.
+The sequence diagram below illustrates the interactions within the `Logic` component, taking `execute("delete 1")` followed by a confirmation response such as `execute("y")` as an example.
 
 ![Interactions Inside the Logic Component for the `delete 1` Command](images/DeleteSequenceDiagram.png)
 
@@ -114,10 +119,10 @@ The sequence diagram below illustrates the interactions within the `Logic` compo
 How the `Logic` component works:
 
 1. When `Logic` is called upon to execute a command, the command is passed to an `InsureConnectParser` object, which in turn creates a parser that matches the command (e.g., `DeleteCommandParser`) and uses it to parse the command.
-1. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
-1. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
+2. This results in a `Command` object (more precisely, an object of one of its subclasses e.g., `DeleteCommand`) which is executed by the `LogicManager`.
+3. The command can communicate with the `Model` when it is executed (e.g. to delete a person).<br>
    Note that although this is shown as a single step in the diagram above for simplicity, the code can require several interactions between the command object and the `Model` to complete the operation.
-1. The result of the command execution is encapsulated as a `CommandResult` object which is returned from `Logic`.
+4. The result of the command execution is encapsulated as a `CommandResult` object which is returned from `Logic`.
 
 Here are the other classes in `Logic` (omitted from the class diagram above) that are used for parsing a user command:
 
@@ -197,18 +202,26 @@ This section describes some noteworthy details on how certain features are imple
 * is an insurance agent (or financial adviser) based in Singapore
 * manages a large portfolio of customers (up to about 1000), each holding one or more insurance policies
 * handles many policies, claims, renewals and follow-ups daily
-* needs to pull up a customer's contact details and policies quickly, for example while the customer is on the line
+* needs to pull up a customer's contact details and policy numbers quickly, for example while the customer is on the line
 * finds it hard to remember customers' policy numbers, but remembers their names
 * does most of their administrative work on a laptop or desktop computer
 * can type fast and prefers typing to mouse interactions
 * is reasonably comfortable using CLI apps
 
-**Value proposition**: InsureConnect gives an insurance agent fast access to customer contact and policy details through typed commands, so that a customer can be found by name instead of by a policy number that is hard to remember. It is faster than a spreadsheet or a mouse-driven CRM, keeps all data on the agent's own computer and works without an internet connection.
+**Value proposition**: InsureConnect gives an insurance agent fast access to customer contact details and associated policy numbers through typed commands, so that a customer can be found by name instead of by a policy number that is hard to remember. It is faster than a spreadsheet or a mouse-driven CRM, keeps all data on the agent's own computer and works without an internet connection.
+
+**Policy scope**: Policy numbers are identifiers attached to customer records. Searching by policy number retrieves matching customer records. InsureConnect does not store policy coverage, premiums, renewal dates or policy status, and remarks apply to a customer rather than an individual policy.
 
 
 ### User stories
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
+
+This table records user needs, including future work; a priority does not indicate implementation status.
+
+For policy-related stories, US06 and US07 support customer lookup by policy number and viewing a customer's policy numbers only. US25 supports deleting customer records; policy numbers can be removed by editing a customer, provided at least one remains.
+
+Detailed policy information (US08), policy renewal and status features (US16-US18), navigation to separate policy records (US22), and the task and renewal overview (US28) are future work and are not implemented.
 
 | Priority | Story | As an …​                          | I want to …​                                                | So that I can…​                                              |
 |--------|-------|-----------------------------------|-------------------------------------------------------------|--------------------------------------------------------------|
@@ -217,8 +230,8 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 | `* * *` | US03  | insurance agent (regular user)    | search for a customer by name                               | quickly find the customer's record                           |
 | `* *`  | US04  | insurance agent (beginner user)   | search for a customer by customer ID                        | retrieve the correct record efficiently                      |
 | `* *`  | US05  | insurance agent (beginner user)   | search for a customer by phone number                       | identify the customer using information they provide         |
-| `* *`  | US06  | insurance agent (beginner user)   | search for a policy by policy number                        | immediately retrieve its details                             |
-| `* *`  | US07  | insurance agent (beginner user)   | view all policies belonging to a customer                   | understand the customer's insurance coverage                 |
+| `* *`  | US06  | insurance agent (beginner user)   | search for a customer by policy number                      | retrieve the associated customer record                      |
+| `* *`  | US07  | insurance agent (beginner user)   | view all policy numbers belonging to a customer             | identify the customer's policies                             |
 | `* *`  | US08  | insurance agent (beginner user)   | view detailed information about a policy                    | answer customer enquiries                                    |
 | `* *`  | US09  | insurance agent (beginner user)   | add notes to a customer record                              | keep track of previous interactions                          |
 | `* *`  | US10  | insurance agent (beginner user)   | update customer contact information                         | keep records accurate                                        |
@@ -414,7 +427,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 * **Agent**: An insurance agent or financial adviser who sells insurance policies and uses InsureConnect to manage their customers
 * **Customer**: A person whose details are recorded in InsureConnect, who holds at least one insurance policy sold by the agent
 * **Policy**: An insurance contract held by a customer, such as a life, health, motor or travel insurance plan
-* **Policy number**: The unique code that identifies a policy, made up of 1 to 30 letters and digits (e.g. `LIFE20481`). Every customer has at least one, and no two customers can share the same policy number. Entered with the `t/` prefix
+* **Policy number**: The unique code that identifies a policy, made up of 1 to 30 characters with at least one letter or digit; hyphens and slashes are also allowed (e.g. `LIFE-2026/SG`). Every customer has at least one, and no two customers can share the same policy number. Entered with the `t/` prefix
 * **Remark**: An optional free text note attached to a customer, used for follow-ups and preferences (e.g. `Prefers WhatsApp after 6pm`). The `r/` prefix sets it, and `edit INDEX r/` clears it. An omitted remark is stored as an empty string when adding a customer
 * **Duplicate customer**: A customer whose name and phone number match those of an existing customer. Name matching ignores case and extra spaces. Phone matching ignores a leading `+`; for Singapore numbers, the `65` country code is also ignored when comparing it with an 8-digit local number
 * **Prefix matching**: The way `find` compares keywords with names: a keyword matches a name if any word in the name starts with the keyword, ignoring case (e.g. `wei` matches `Tan Wei Ming`, but `ei` does not)

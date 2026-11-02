@@ -45,7 +45,7 @@ public class SampleDataUtilTest {
     public void getTagSet_deduplicatesAndValidatesValues() {
         assertEquals(Set.of(), SampleDataUtil.getTagSet());
         assertEquals(Set.of(new Tag("LIFE1")), SampleDataUtil.getTagSet("LIFE1", "LIFE1"));
-        assertThrows(IllegalArgumentException.class, () -> SampleDataUtil.getTagSet("LIFE-1"));
+        assertThrows(IllegalArgumentException.class, () -> SampleDataUtil.getTagSet("LIFE_1"));
         assertThrows(NullPointerException.class, () -> SampleDataUtil.getTagSet((String) null));
     }
 }

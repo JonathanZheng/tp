@@ -3,7 +3,6 @@ package seedu.insureconnect.logic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static seedu.insureconnect.logic.Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX;
 import static seedu.insureconnect.logic.Messages.MESSAGE_UNKNOWN_COMMAND;
 import static seedu.insureconnect.logic.commands.CommandTestUtil.ADDRESS_DESC_AMY;
 import static seedu.insureconnect.logic.commands.CommandTestUtil.EMAIL_DESC_AMY;
@@ -79,7 +78,9 @@ public class LogicManagerTest {
     @Test
     public void execute_commandExecutionError_throwsCommandException() {
         String deleteCommand = "delete 9";
-        assertCommandException(deleteCommand, MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
+        assertCommandException(deleteCommand,
+                Messages.getInvalidPersonDisplayedIndexMessage(
+                        model.getFilteredPersonList().size()));
     }
 
     @Test
