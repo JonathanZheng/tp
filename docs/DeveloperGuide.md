@@ -19,6 +19,7 @@ Notable uses of AI:
 * @JonathanZheng used OpenAI Codex for preliminary PR reviews and to implement and test the offline User Guide.
 * @BenjaminWong33 used OpenAI Codex to explain the codebase, generate ideas, assist with debugging and testing, and suggest implementation approaches.
 * @denzelgoo used OpenAI Codex to assist with idea generation, as well as planning and drafting implementation changes. OpenAI Codex was also used to review the accuracy of documentation against the actual implementation and behaviours of the application.
+* @firebean850 used OpenAI Codex to assist with generating ideas, assisting with debugging and testing, and planning feature changes.
 
 --------------------------------------------------------------------------------------------------------------------
 

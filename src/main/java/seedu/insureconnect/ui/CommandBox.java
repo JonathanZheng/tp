@@ -48,7 +48,7 @@ public class CommandBox extends UiPart<Region> {
             ClearCommand.COMMAND_WORD, DeleteCommand.COMMAND_WORD,
             EditCommand.COMMAND_WORD, ExitCommand.COMMAND_WORD, FindCommand.COMMAND_WORD,
             HelpCommand.COMMAND_WORD, ListCommand.COMMAND_WORD, ResizeCommand.COMMAND_WORD,
-            UserGuideCommand.COMMAND_WORD).sorted().toList();
+            UserGuideCommand.COMMAND_ALIAS, UserGuideCommand.COMMAND_WORD).sorted().toList();
 
     private final CommandExecutor commandExecutor;
     private boolean awaitingConfirmation;

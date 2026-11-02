@@ -9,6 +9,7 @@ import seedu.insureconnect.model.Model;
  */
 public class UserGuideCommand extends Command {
     public static final String COMMAND_WORD = "userguide";
+    public static final String COMMAND_ALIAS = "ug";
     public static final String MESSAGE_USAGE = COMMAND_WORD
             + ": Opens the online User Guide in the default web browser.\n"
             + "Format: " + USER_GUIDE_COMMAND_FORMAT;

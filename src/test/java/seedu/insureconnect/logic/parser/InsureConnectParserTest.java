@@ -109,11 +109,20 @@ public class InsureConnectParserTest {
 
     @Test
     public void parseCommand_userGuide() throws Exception {
-        // EP: no arguments
-        assertTrue(parser.parseCommand(UserGuideCommand.COMMAND_WORD) instanceof UserGuideCommand);
+        // EP: full command word without arguments
+        assertTrue(parser.parseCommand(UserGuideCommand.COMMAND_WORD)
+                instanceof UserGuideCommand);
 
-        // EP: extraneous arguments are ignored
+        // EP: short-form command word without arguments
+        assertTrue(parser.parseCommand(UserGuideCommand.COMMAND_ALIAS)
+                instanceof UserGuideCommand);
+
+        // EP: extraneous arguments after the full command word are ignored
         assertTrue(parser.parseCommand(UserGuideCommand.COMMAND_WORD + " extra")
+                instanceof UserGuideCommand);
+
+        // EP: extraneous arguments after the short-form command word are ignored
+        assertTrue(parser.parseCommand(UserGuideCommand.COMMAND_ALIAS + " extra")
                 instanceof UserGuideCommand);
     }
 }
