@@ -1,6 +1,8 @@
 package seedu.insureconnect.ui;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import javafx.application.Platform;
@@ -42,6 +44,15 @@ public class CommandBox extends UiPart<Region> {
     private static final KeyCombination HISTORY_PREVIOUS = new KeyCodeCombination(KeyCode.UP);
     private static final KeyCombination HISTORY_NEXT = new KeyCodeCombination(KeyCode.DOWN);
     private static final KeyCombination ACCEPT_SUGGESTION = new KeyCodeCombination(KeyCode.TAB);
+    private static final Map<KeyCode, String> ACCENTS = Map.of(
+        KeyCode.A, "àáâäãåāæ",
+        KeyCode.C, "çćč",
+        KeyCode.E, "èéêëēėę",
+        KeyCode.I, "ìíîïīį",
+        KeyCode.N, "ñń",
+        KeyCode.O, "òóôöõøōœ",
+        KeyCode.U, "ùúûüū",
+        KeyCode.Y, "ýÿ");
 
     // Sorted so that the alphabetically first match is suggested when several command words fit.
     private static final List<String> COMMAND_WORDS = Stream.of(AddCommand.COMMAND_WORD,
@@ -57,6 +68,13 @@ public class CommandBox extends UiPart<Region> {
     private int draftAnchor;
     private int draftCaret;
 
+    private KeyCode heldAccentKey;
+    private String accentChoices;
+    private String firstTypedCharacter;
+    private int accentStart;
+    private boolean consumeNumber;
+    private boolean accentSelectionActive;
+
     @FXML
     private TextArea commandTextField;
 
@@ -69,6 +87,15 @@ public class CommandBox extends UiPart<Region> {
     public CommandBox(CommandExecutor commandExecutor) {
         super(FXML);
         this.commandExecutor = commandExecutor;
+        if (System.getProperty("os.name", "")
+                .toLowerCase(Locale.ROOT).contains("mac")) {
+            commandTextField.addEventFilter(
+                    KeyEvent.KEY_PRESSED, this::handleAccentPressed);
+            commandTextField.addEventFilter(
+                    KeyEvent.KEY_TYPED, this::handleAccentTyped);
+            commandTextField.addEventFilter(
+                    KeyEvent.KEY_RELEASED, this::handleAccentReleased);
+        }
         commandTextField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleCommandKey);
         commandTextField.addEventFilter(KeyEvent.KEY_PRESSED, this::handleSuggestionKey);
 
@@ -238,7 +265,112 @@ public class CommandBox extends UiPart<Region> {
     Node getFocusTarget() {
         return commandTextField;
     }
+    /**
+     * Opens the accent selector on a repeated held-key event and handles number selection.
+     */
+    private void handleAccentPressed(KeyEvent event) {
+        String keyText = event.getText();
+        int option = keyText.length() == 1
+                ? "123456789".indexOf(keyText)
+                : -1;
 
+        if (accentSelectionActive
+                && option >= 0
+                && option < accentChoices.length()) {
+            int accentEnd = accentStart + firstTypedCharacter.length();
+            String currentText = commandTextField.getText();
+
+            if (accentEnd <= currentText.length()
+                    && currentText.substring(accentStart, accentEnd)
+                            .equals(firstTypedCharacter)) {
+                String replacement =
+                        String.valueOf(accentChoices.charAt(option));
+
+                if (Character.isUpperCase(
+                        firstTypedCharacter.codePointAt(0))) {
+                    replacement = replacement.toUpperCase(Locale.ROOT);
+                }
+
+                commandTextField.replaceText(
+                        accentStart, accentEnd, replacement);
+                commandTextField.positionCaret(
+                        accentStart + replacement.length());
+            }
+
+            clearAccentState();
+            consumeNumber = true;
+            event.consume();
+            return;
+        }
+
+        String choices = ACCENTS.get(event.getCode());
+        boolean modified = event.isControlDown()
+                || event.isAltDown()
+                || event.isMetaDown();
+
+        if (modified || choices == null) {
+            if (heldAccentKey != null
+                    && event.getCode() != heldAccentKey) {
+                clearAccentState();
+            }
+            return;
+        }
+
+        if (heldAccentKey == null) {
+            heldAccentKey = event.getCode();
+            accentChoices = choices;
+            accentStart = commandTextField.getSelection().getStart();
+            return;
+        }
+
+        if (event.getCode() == heldAccentKey) {
+            accentSelectionActive = firstTypedCharacter != null;
+            event.consume();
+        }
+    }
+
+    /**
+     * Keeps the first letter and suppresses subsequent auto-repeat characters.
+     */
+    private void handleAccentTyped(KeyEvent event) {
+        if (consumeNumber) {
+            consumeNumber = false;
+            event.consume();
+            return;
+        }
+
+        if (heldAccentKey == null || event.getCharacter().isEmpty()) {
+            return;
+        }
+
+        if (firstTypedCharacter == null) {
+            firstTypedCharacter = event.getCharacter();
+        } else if (event.getCharacter()
+                .equalsIgnoreCase(firstTypedCharacter)) {
+            event.consume();
+        }
+    }
+
+    /**
+     * Ends accent handling when the original letter is released.
+     */
+    private void handleAccentReleased(KeyEvent event) {
+        if (event.getCode() == heldAccentKey) {
+            clearAccentState();
+        }
+    }
+
+    /**
+     * Hides the selector and clears the held-key state.
+     */
+    private void clearAccentState() {
+        heldAccentKey = null;
+        accentChoices = null;
+        firstTypedCharacter = null;
+        accentStart = 0;
+        consumeNumber = false;
+        accentSelectionActive = false;
+    }
     /**
      * Represents a function that can execute commands.
      */
