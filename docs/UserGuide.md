@@ -30,7 +30,7 @@ InsureConnect stores customer contact details and associated policy numbers. You
 
    As you type a command prefix, InsureConnect suggests the remaining command text in grey. Press **Tab** to accept the suggestion.
 
-   ![Command box showing a ghost-text command suggestion](images/commandBoxGhostText.png)
+   ![Command box showing a ghost-text command suggestion](images/CommandBoxGhostText.png)
 
    Some example commands you can try:
 
