@@ -141,43 +141,54 @@ window and Help window. Command errors remain highlighted in both schemes.</p>
 normally, and restored the next time you launch InsureConnect. Switching schemes
 preserves your command text, output, and selected contact.</p>
 <h2 id="features">Features</h2>
-<div markdown="block" class="alert alert-info">
-
-**:information_source: Notes about the command format:**<br>
-
-* Words in `UPPER_CASE` are the parameters to be supplied by the user.<br>
-  For example, in `add n/NAME`, replace `NAME` with a value such as `John Doe`.
-
-* Items in square brackets are optional.<br>
-  For example, `edit INDEX [n/NAME]` can be used as `edit 1 n/John Doe` or as `edit 1 p/98765432`.
-
-* Items followed by `…`​ can appear zero or more times.<br>
-  For example, `[t/POLICY_NUMBER]…​` in `edit` may be omitted, or written as `t/LIFE20481` or `t/LIFE20481 t/HEALTH20482`.
-
-* Parameters can be in any order.<br>
-  For example, if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
-
-* **Name constraints**: `NAME` must start with a Latin-script letter or digit. It may contain Latin-script letters (including accented letters such as `é` and `ö`), combining accent marks, digits, spaces, and the characters `-`, `'`, `’`, `.`, `/`, and `!`. Names written in other scripts are not supported, and names cannot consist solely of punctuation (e.g. `---`, `...`, `///` are invalid).
-
-* **Policy number constraints**: Each `t/POLICY_NUMBER` must be 1 to 30 characters long, contain at least one letter or digit, and may include hyphens (`-`) or slashes (`/`). Spaces and other punctuation are not allowed. Every customer needs at least one policy number, and a policy number can belong to only one customer. Policy numbers are case-insensitive and are displayed in uppercase. For example, life20481 and LIFE20481 refer to the same policy number.
-
-* **Escape character (`!`) for name, address, and remark prefix collisions**:
-  Command prefixes are identified by a space followed by a letter and a slash (e.g. ` a/` for address, ` t/` for policy number). Names, addresses, or remarks that contain these patterns can conflict with command prefixes if typed directly.<br>
-  To avoid prefix collisions, prefix the collision point with an exclamation mark `!` within the name, address, or remark field:
-  * `n/Mohd !a/l Kassim` or `n/Mohd a!/l Kassim` will be saved as `Mohd a/l Kassim`.
-  * Indian patronymics such as `s/o` or `d/o` (e.g. `n/Ravi s/o Muthu`) do not conflict with existing prefixes and do not require escaping (though `!s/o` is also supported).
-  * In a remark, `r/dietary restrictions: !n/a` will be saved as `dietary restrictions: n/a`.
-  * In an address, `a/Blk 123 !t/4` will be saved as `Blk 123 t/4`.
-  * If you need a literal exclamation mark in a name, address, or remark, type `!!` (for example, `a/Block!! A` is saved as `Block! A`).
-  * **Warning:** A single `!` before any character is treated as an escape marker and removed. For example, `r/Great! Thanks` is saved as `Great Thanks`.
-  * **Note:** `!` is treated as an escape character only in the name (`n/`), address (`a/`), and remark (`r/`) fields. Other fields (such as `e/` email) do not use `!` as an escape character. Their own validation rules still apply; for example, email addresses containing `!` are not accepted.
-
-* Extraneous parameters for commands that take no parameters, such as `help`, `exit`, `clear`, `userguide`, and `ug`, are ignored.<br>
-  For example, `help 123` is interpreted as `help`.
-
-* If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
+<div class="alert alert-info">
+<p><strong>ℹ️ Notes about the command format:</strong><br></p>
+<ul>
+<li>
+<p>Words in <code>UPPER_CASE</code> are the parameters to be supplied by the user.<br>
+  For example, in <code>add n/NAME</code>, replace <code>NAME</code> with a value such as <code>John Doe</code>.</p>
+</li>
+<li>
+<p>Items in square brackets are optional.<br>
+  For example, <code>edit INDEX [n/NAME]</code> can be used as <code>edit 1 n/John Doe</code> or as <code>edit 1 p/98765432</code>.</p>
+</li>
+<li>
+<p>Items followed by <code>…</code>​ can appear zero or more times.<br>
+  For example, <code>[t/POLICY_NUMBER]…​</code> in <code>edit</code> may be omitted, or written as <code>t/LIFE20481</code> or <code>t/LIFE20481 t/HEALTH20482</code>.</p>
+</li>
+<li>
+<p>Parameters can be in any order.<br>
+  For example, if the command specifies <code>n/NAME p/PHONE_NUMBER</code>, <code>p/PHONE_NUMBER n/NAME</code> is also acceptable.</p>
+</li>
+<li>
+<p><strong>Name constraints</strong>: <code>NAME</code> must start with a Latin-script letter or digit. It may contain Latin-script letters (including accented letters such as <code>é</code> and <code>ö</code>), combining accent marks, digits, spaces, and the characters <code>-</code>, <code>'</code>, <code>’</code>, <code>.</code>, <code>/</code>, and <code>!</code>. Names written in other scripts are not supported, and names cannot consist solely of punctuation (e.g. <code>---</code>, <code>...</code>, <code>///</code> are invalid).</p>
+</li>
+<li>
+<p><strong>Policy number constraints</strong>: Each <code>t/POLICY_NUMBER</code> must be 1 to 30 characters long, contain at least one letter or digit, and may include hyphens (<code>-</code>) or slashes (<code>/</code>). Spaces and other punctuation are not allowed. Every customer needs at least one policy number, and a policy number can belong to only one customer. Policy numbers are case-insensitive and are displayed in uppercase. For example, life20481 and LIFE20481 refer to the same policy number.</p>
+</li>
+<li>
+<p><strong>Escape character (<code>!</code>) for name, address, and remark prefix collisions</strong>:
+  Command prefixes are identified by a space followed by a letter and a slash (e.g. <code>a/</code> for address, <code>t/</code> for policy number). Names, addresses, or remarks that contain these patterns can conflict with command prefixes if typed directly.<br>
+  To avoid prefix collisions, prefix the collision point with an exclamation mark <code>!</code> within the name, address, or remark field:</p>
+</li>
+<li><code>n/Mohd !a/l Kassim</code> or <code>n/Mohd a!/l Kassim</code> will be saved as <code>Mohd a/l Kassim</code>.</li>
+<li>Indian patronymics such as <code>s/o</code> or <code>d/o</code> (e.g. <code>n/Ravi s/o Muthu</code>) do not conflict with existing prefixes and do not require escaping (though <code>!s/o</code> is also supported).</li>
+<li>In a remark, <code>r/dietary restrictions: !n/a</code> will be saved as <code>dietary restrictions: n/a</code>.</li>
+<li>In an address, <code>a/Blk 123 !t/4</code> will be saved as <code>Blk 123 t/4</code>.</li>
+<li>If you need a literal exclamation mark in a name, address, or remark, type <code>!!</code> (for example, <code>a/Block!! A</code> is saved as <code>Block! A</code>).</li>
+<li><strong>Warning:</strong> A single <code>!</code> before any character is treated as an escape marker and removed. For example, <code>r/Great! Thanks</code> is saved as <code>Great Thanks</code>.</li>
+<li>
+<p><strong>Note:</strong> <code>!</code> is treated as an escape character only in the name (<code>n/</code>), address (<code>a/</code>), and remark (<code>r/</code>) fields. Other fields (such as <code>e/</code> email) do not use <code>!</code> as an escape character. Their own validation rules still apply; for example, email addresses containing <code>!</code> are not accepted.</p>
+</li>
+<li>
+<p>Extraneous parameters for commands that take no parameters, such as <code>help</code>, <code>exit</code>, <code>clear</code>, <code>userguide</code>, and <code>ug</code>, are ignored.<br>
+  For example, <code>help 123</code> is interpreted as <code>help</code>.</p>
+</li>
+<li>
+<p>If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.</p>
+</li>
+</ul>
 </div>
-
 <h3 id="customer-field-requirements">Customer field requirements</h3>
 <p>These rules apply when adding a customer or changing a field with <code>edit</code>:</p>
 <table>
@@ -237,10 +248,9 @@ Customers with the same name but different phone numbers, or different names wit
 phone number, are allowed.</p>
 <p>Format: <code>add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS t/POLICY_NUMBER [t/POLICY_NUMBER]…​ [r/REMARK]</code></p>
 <p>The <a href="#customer-field-requirements">customer field requirements</a> above apply to every supplied field.</p>
-<div markdown="span" class="alert alert-primary">:bulb: **Tip:**
+<div class="alert alert-primary">💡 <strong>Tip:</strong>
 A customer must have at least one policy number. An existing customer's policy number cannot be reused.
 </div>
-
 <ul>
 <li><code>r/REMARK</code> is optional. If omitted, the customer's remark is empty.</li>
 </ul>
@@ -374,12 +384,11 @@ Enter <code>n</code>, press Enter without a response, or enter anything else to 
 <h3 id="editing-the-data-file">Editing the data file</h3>
 <p>InsureConnect saves its files relative to the working directory (the directory from which you launch it): customer records are saved to <code>data/addressbook.json</code>, and preferences are saved to <code>preferences.json</code>. For example, if you run the JAR by its full path while your terminal is in <code>/home</code>, the files are <code>/home/data/addressbook.json</code> and <code>/home/preferences.json</code>, regardless of where the JAR is stored. Launching InsureConnect from different directories uses different records and preferences files. Launch it from the same directory each time to keep using the same records and preferences. The legacy data filename is retained so existing installations continue to load their records. Advanced users are welcome to update data directly by editing <code>data/addressbook.json</code>.</p>
 <p>Addresses already saved with more than 300 characters are loaded and preserved as-is. The 300-character limit applies to addresses entered with the <code>add</code> and <code>edit</code> commands.</p>
-<div markdown="span" class="alert alert-warning">:exclamation: **Caution:**
+<div class="alert alert-warning">❗ <strong>Caution:</strong>
 If your changes make the data file invalid, InsureConnect displays a warning and starts with an empty customer list. The invalid file remains unchanged and cannot be overwritten by add, edit, delete, or clear; commands that attempt to save customer records will fail. To resume saving, close InsureConnect and repair, move, rename, or delete the invalid file before restarting. We recommend making a backup before editing the file.<br>
 
 Furthermore, certain edits can cause InsureConnect to behave in unexpected ways (e.g., if a value entered is outside of the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </div>
-
 <hr />
 <h3 id="loading-contact-files-from-older-versions">Loading contact files from older versions</h3>
 <p>Contact files without <code>createdAt</code> timestamps load automatically. Their existing
