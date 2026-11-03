@@ -5,6 +5,7 @@ import static seedu.insureconnect.commons.util.AppUtil.checkArgument;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -21,7 +22,8 @@ public final class StringUtil {
      * {@code Jane}, and {@code Tan}.
      */
     private static Stream<String> getSearchableWords(String sentence) {
-        return Arrays.stream(sentence.split("\\s+"))
+        String normalizedSentence = normalizeForComparison(sentence);
+        return Arrays.stream(normalizedSentence.split("\\s+"))
                 .flatMap(word -> Stream.concat(
                         Stream.of(word),
                         Arrays.stream(word.split("-"))));
@@ -42,12 +44,11 @@ public final class StringUtil {
         requireNonNull(sentence);
         requireNonNull(word);
 
-        String preppedWord = word.trim();
+        String preppedWord = normalizeForComparison(word.trim());
         checkArgument(!preppedWord.isEmpty(), "Word parameter cannot be empty");
         checkArgument(preppedWord.split("\\s+").length == 1, "Word parameter should be a single word");
 
-        String preppedSentence = sentence;
-        return getSearchableWords(preppedSentence)
+        return getSearchableWords(sentence)
                 .anyMatch(preppedWord::equalsIgnoreCase);
     }
 
@@ -61,13 +62,18 @@ public final class StringUtil {
     public static boolean hasWordStartingWithIgnoreCase(String sentence, String prefix) {
         requireNonNull(sentence);
         requireNonNull(prefix);
-
-        String trimmedPrefix = prefix.trim();
+        String trimmedPrefix = normalizeForComparison(prefix.trim());
         checkArgument(!trimmedPrefix.isEmpty(), "Prefix parameter cannot be empty");
         checkArgument(trimmedPrefix.split("\\s+").length == 1, "Prefix parameter should be a single word");
-
         return getSearchableWords(sentence)
                 .anyMatch(word -> word.regionMatches(true, 0, trimmedPrefix, 0, trimmedPrefix.length()));
+    }
+
+    /**
+     * Converts canonically equivalent Unicode text to the same representation for comparison.
+     */
+    private static String normalizeForComparison(String value) {
+        return Normalizer.normalize(value, Normalizer.Form.NFC);
     }
 
     /**
