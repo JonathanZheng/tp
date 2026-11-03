@@ -27,7 +27,18 @@ def embed_image(match):
 
 
 body = re.sub(r"!\[([^\]]*)\]\(([^)]+)\)", embed_image, body)
-rendered = markdown.markdown(body, extensions=["tables", "fenced_code", "toc", "sane_lists"])
+emoji_shortcodes = {
+    ":information_source:": "ℹ️",
+    ":bulb:": "💡",
+    ":exclamation:": "❗",
+}
+for shortcode, emoji in emoji_shortcodes.items():
+    body = body.replace(shortcode, emoji)
+
+rendered = markdown.markdown(
+    body,
+    extensions=["tables", "fenced_code", "toc", "sane_lists", "md_in_html"],
+)
 page = """<!doctype html>
 <html lang="en">
 <head>
