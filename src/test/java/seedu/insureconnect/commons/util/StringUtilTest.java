@@ -161,6 +161,23 @@ public class StringUtilTest {
         // EP: shortest and longest matching prefix
         assertTrue(StringUtil.hasWordStartingWithIgnoreCase("John", "j")); // boundary value
         assertTrue(StringUtil.hasWordStartingWithIgnoreCase("John", "JOHN")); // boundary value
+        // EP: later component of a hyphenated name
+        assertTrue(StringUtil.hasWordStartingWithIgnoreCase("Mary-Jane Tan", "Ja"));
+        assertTrue(StringUtil.hasWordStartingWithIgnoreCase("Mary-Jane Tan", "Jane"));
+        // EP: complete hyphenated name remains searchable
+        assertTrue(StringUtil.hasWordStartingWithIgnoreCase("Mary-Jane Tan", "Mary-Jane"));
+        assertTrue(StringUtil.hasWordStartingWithIgnoreCase("Mary-Jane Tan", "Mary-J"));
+    }
+
+    /**
+     * A hyphen separates searchable name components, including the later component.
+     */
+    @Test
+    public void containsWordIgnoreCase_hyphenatedNameComponent_returnsTrue() {
+        // EP: later component of a hyphenated name is a searchable name word
+        assertTrue(StringUtil.containsWordIgnoreCase("Mary-Jane Tan", "Jane"));
+        // EP: complete hyphenated name remains an exact searchable word
+        assertTrue(StringUtil.containsWordIgnoreCase("Mary-Jane Tan", "Mary-Jane"));
     }
 
     /**

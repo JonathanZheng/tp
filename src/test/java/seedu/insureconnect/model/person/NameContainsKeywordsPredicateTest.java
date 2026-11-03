@@ -160,6 +160,20 @@ public class NameContainsKeywordsPredicateTest {
         assertFalse(new NameContainsKeywordsPredicate(List.of()).hasExactMatch(person)); // boundary value
     }
 
+    /**
+     * A name keyword can match the later component of a hyphenated customer name.
+     */
+    @Test
+    public void test_hyphenatedNameLaterComponent_returnsTrue() {
+        Person person = new PersonBuilder().withName("Mary-Jane Tan").build();
+
+        // EP: later component of a hyphenated name
+        assertTrue(new NameContainsKeywordsPredicate(List.of("Jane")).test(person));
+        // EP: complete hyphenated name remains searchable
+        assertTrue(new NameContainsKeywordsPredicate(List.of("Mary-Jane")).test(person));
+        assertTrue(new NameContainsKeywordsPredicate(List.of("Mary-J")).test(person));
+    }
+
     @Test
     public void canonicallyEquivalentAccentedNames_matchForPrefixAndExactSearch() {
         String precomposedName = "José";

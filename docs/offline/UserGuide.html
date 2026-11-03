@@ -281,6 +281,7 @@ A customer must have at least one policy number. An existing customer's policy n
 <li>Keyword order does not matter; for example, <code>Hans Bo</code> matches <code>Bo Hans</code>.</li>
 <li>Unprefixed keywords search names only, including when a keyword contains digits.</li>
 <li>Keywords match the start of any name word; for example, <code>Han</code> matches <code>Hans</code> and <code>Bo Hans</code>.</li>
+<li>Hyphens separate searchable name components; for example, <code>find Jane</code> matches <code>Mary-Jane Tan</code>.</li>
 <li>Customers with an exact name-word match appear before prefix-only matches. For example, <code>find John</code> shows
   <code>John Tan</code> before <code>Johnny Lim</code>. Matching is case-insensitive and considers any name word or keyword.</li>
 <li>Customers tied in match quality retain their stored order. Searching only changes the displayed order;

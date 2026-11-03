@@ -239,6 +239,7 @@ Format: `find KEYWORD [MORE_KEYWORDS]` or `find [n/KEYWORDS] [p/PHONE_PREFIX] [t
 * Keyword order does not matter; for example, `Hans Bo` matches `Bo Hans`.
 * Unprefixed keywords search names only, including when a keyword contains digits.
 * Keywords match the start of any name word; for example, `Han` matches `Hans` and `Bo Hans`.
+* Hyphens separate searchable name components; for example, `find Jane` matches `Mary-Jane Tan`.
 * Customers with an exact name-word match appear before prefix-only matches. For example, `find John` shows
   `John Tan` before `Johnny Lim`. Matching is case-insensitive and considers any name word or keyword.
 * Customers tied in match quality retain their stored order. Searching only changes the displayed order;

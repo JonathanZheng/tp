@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.Normalizer;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * Helper functions for handling strings.
@@ -15,6 +16,18 @@ public final class StringUtil {
     private StringUtil() {
     }
 
+    /**
+     * Returns each whitespace-delimited word and, for hyphenated words, each component.
+     * For example, {@code Mary-Jane Tan} produces {@code Mary-Jane}, {@code Mary},
+     * {@code Jane}, and {@code Tan}.
+     */
+    private static Stream<String> getSearchableWords(String sentence) {
+        String normalizedSentence = normalizeForComparison(sentence);
+        return Arrays.stream(normalizedSentence.split("\\s+"))
+                .flatMap(word -> Stream.concat(
+                        Stream.of(word),
+                        Arrays.stream(word.split("-"))));
+    }
 
     /**
      * Returns true if the {@code sentence} contains the {@code word}.
@@ -35,15 +48,13 @@ public final class StringUtil {
         checkArgument(!preppedWord.isEmpty(), "Word parameter cannot be empty");
         checkArgument(preppedWord.split("\\s+").length == 1, "Word parameter should be a single word");
 
-        String preppedSentence = normalizeForComparison(sentence);
-        String[] wordsInPreppedSentence = preppedSentence.split("\\s+");
-
-        return Arrays.stream(wordsInPreppedSentence)
+        return getSearchableWords(sentence)
                 .anyMatch(preppedWord::equalsIgnoreCase);
     }
 
     /**
-     * Returns true if any whitespace-separated word in {@code sentence} starts with {@code prefix}, ignoring case.
+     * Returns true if a searchable word in {@code sentence} starts with {@code prefix},
+     * ignoring case. A complete hyphenated word and each of its components are searchable.
      *
      * @param sentence cannot be null
      * @param prefix cannot be null, cannot be empty, must be a single word; surrounding whitespace is ignored
@@ -54,9 +65,8 @@ public final class StringUtil {
         String trimmedPrefix = normalizeForComparison(prefix.trim());
         checkArgument(!trimmedPrefix.isEmpty(), "Prefix parameter cannot be empty");
         checkArgument(trimmedPrefix.split("\\s+").length == 1, "Prefix parameter should be a single word");
-        String normalizedSentence = normalizeForComparison(sentence);
-        return Arrays.stream(normalizedSentence.split("\\s+"))
-            .anyMatch(word -> word.regionMatches(true, 0, trimmedPrefix, 0, trimmedPrefix.length()));
+        return getSearchableWords(sentence)
+                .anyMatch(word -> word.regionMatches(true, 0, trimmedPrefix, 0, trimmedPrefix.length()));
     }
 
     /**
