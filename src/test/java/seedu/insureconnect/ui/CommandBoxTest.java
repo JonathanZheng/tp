@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import seedu.insureconnect.logic.commands.CommandResult;
 import seedu.insureconnect.logic.commands.exceptions.CommandException;
 import seedu.insureconnect.logic.parser.exceptions.ParseException;
@@ -149,6 +150,134 @@ public class CommandBoxTest extends GuiTest {
         assertEquals("", CommandBox.findSuggestion("con"));
     }
 
+    @Test
+    public void accentInput_holdOAndSelectFour_insertsUmlaut() throws Exception {
+        runOnFxThread(() -> {
+            CommandBox box = createCommandBoxForOperatingSystem("Mac OS X");
+            show(box.getRoot());
+
+            TextArea input = inputOf(box);
+            input.requestFocus();
+
+            press(input, KeyCode.O, "o", false, false);
+            type(input, "o", false);
+
+            // Simulates the repeated events generated while O remains held.
+            press(input, KeyCode.O, "o", false, false);
+            type(input, "o", false);
+            press(input, KeyCode.O, "o", false, false);
+            type(input, "o", false);
+
+            assertEquals("o", input.getText());
+
+            press(input, KeyCode.DIGIT4, "4", false, false);
+            type(input, "4", false);
+
+            assertEquals("ö", input.getText());
+            assertEquals(1, input.getCaretPosition());
+        });
+    }
+
+    @Test
+    public void accentInput_shortPressAndUppercaseSelection_behavesCorrectly() throws Exception {
+        runOnFxThread(() -> {
+            CommandBox box = createCommandBoxForOperatingSystem("Mac OS X");
+            show(box.getRoot());
+
+            TextArea input = inputOf(box);
+            input.requestFocus();
+
+            press(input, KeyCode.O, "o", false, false);
+            type(input, "o", false);
+            release(input, KeyCode.O, false);
+
+            assertEquals("o", input.getText());
+
+            input.clear();
+
+            press(input, KeyCode.O, "O", true, false);
+            type(input, "O", true);
+            press(input, KeyCode.O, "O", true, false);
+            type(input, "O", true);
+
+            press(input, KeyCode.DIGIT4, "4", false, false);
+            type(input, "4", false);
+
+            assertEquals("Ö", input.getText());
+        });
+    }
+
+    @Test
+    public void accentInput_modifiedAndInterruptedInput_doesNotActivate() throws Exception {
+        runOnFxThread(() -> {
+            CommandBox box = createCommandBoxForOperatingSystem("Mac OS X");
+            show(box.getRoot());
+
+            TextArea input = inputOf(box);
+            input.requestFocus();
+
+            // Option-modified keys must remain under JavaFX/macOS control.
+            press(input, KeyCode.O, "o", false, true);
+            press(input, KeyCode.O, "o", false, true);
+            assertEquals("", input.getText());
+
+            // Repetition before KEY_TYPED must not activate selection.
+            press(input, KeyCode.O, "o", false, false);
+            press(input, KeyCode.O, "o", false, false);
+            release(input, KeyCode.O, false);
+            assertEquals("", input.getText());
+
+            // Another key cancels the held-letter state.
+            press(input, KeyCode.O, "o", false, false);
+            type(input, "o", false);
+            press(input, KeyCode.B, "b", false, false);
+
+            // With no held accent key, ordinary typed input continues normally.
+            type(input, "x", false);
+            assertEquals("ox", input.getText());
+        });
+    }
+
+    @Test
+    public void accentInput_optionOutsideAvailableRange_typesNumberNormally() throws Exception {
+        runOnFxThread(() -> {
+            CommandBox box = createCommandBoxForOperatingSystem("Mac OS X");
+            show(box.getRoot());
+
+            TextArea input = inputOf(box);
+            input.requestFocus();
+
+            // Y only has two configured choices: ý and ÿ.
+            press(input, KeyCode.Y, "y", false, false);
+            type(input, "y", false);
+            press(input, KeyCode.Y, "y", false, false);
+            type(input, "y", false);
+
+            press(input, KeyCode.DIGIT4, "4", false, false);
+            type(input, "4", false);
+
+            assertEquals("y4", input.getText());
+        });
+    }
+
+    @Test
+    public void accentInput_nonMac_doesNotInterceptRepeatedInput() throws Exception {
+        runOnFxThread(() -> {
+            CommandBox box = createCommandBoxForOperatingSystem("Linux");
+            show(box.getRoot());
+
+            TextArea input = inputOf(box);
+            input.requestFocus();
+
+            press(input, KeyCode.O, "o", false, false);
+            type(input, "o", false);
+            press(input, KeyCode.O, "o", false, false);
+            type(input, "o", false);
+
+            assertEquals("oo", input.getText());
+        });
+    }
+
     /**
      * Verifies retry styling is not duplicated and that editing clears only the error state.
      */
@@ -162,6 +291,72 @@ public class CommandBoxTest extends GuiTest {
         input.appendText(" corrected");
         assertFalse(input.getStyleClass().contains(CommandBox.ERROR_STYLE_CLASS));
         assertTrue(input.getStyleClass().contains("custom-style"));
+    }
+
+    /**
+     * Creates a command box while reporting the requested operating system.
+     */
+    private CommandBox createCommandBoxForOperatingSystem(String operatingSystem) {
+        String originalOperatingSystem = System.getProperty("os.name");
+
+        try {
+            System.setProperty("os.name", operatingSystem);
+            return new CommandBox(command -> new CommandResult("Done"));
+        } finally {
+            if (originalOperatingSystem == null) {
+                System.clearProperty("os.name");
+            } else {
+                System.setProperty("os.name", originalOperatingSystem);
+            }
+        }
+    }
+
+    /**
+     * Sends a key-pressed event with printable key text.
+     */
+    private void press(TextArea input, KeyCode code, String text,
+                       boolean shiftDown, boolean altDown) {
+        input.fireEvent(new KeyEvent(
+                KeyEvent.KEY_PRESSED,
+                "",
+                text,
+                code,
+                shiftDown,
+                false,
+                altDown,
+                false));
+    }
+
+    /**
+     * Sends a typed-character event.
+     */
+    private void type(TextArea input, String character,
+                      boolean shiftDown) {
+        input.fireEvent(new KeyEvent(
+                KeyEvent.KEY_TYPED,
+                character,
+                "",
+                KeyCode.UNDEFINED,
+                shiftDown,
+                false,
+                false,
+                false));
+    }
+
+    /**
+     * Sends a key-release event.
+     */
+    private void release(TextArea input, KeyCode code,
+                         boolean shiftDown) {
+        input.fireEvent(new KeyEvent(
+                KeyEvent.KEY_RELEASED,
+                "",
+                "",
+                code,
+                shiftDown,
+                false,
+                false,
+                false));
     }
 
     /**
