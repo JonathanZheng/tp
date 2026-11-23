@@ -51,13 +51,21 @@ public class AllCriteriaPredicateTest {
     }
 
     @Test
-    public void equalsAndToString_describeCriteria() {
+    public void equals_variousObjects_comparesCriteria() {
         AllCriteriaPredicate predicate = new AllCriteriaPredicate(List.of(name, phone));
+        // EP: same criteria
         assertTrue(predicate.equals(predicate));
         assertEquals(predicate, new AllCriteriaPredicate(List.of(name, phone)));
+        // EP: different criteria
         assertFalse(predicate.equals(new AllCriteriaPredicate(List.of(phone))));
+        // EP: null or another type
         assertFalse(predicate.equals(null));
         assertFalse(predicate.equals(name));
+    }
+
+    @Test
+    public void toString_twoCriteria_listsCriteria() {
+        AllCriteriaPredicate predicate = new AllCriteriaPredicate(List.of(name, phone));
         assertEquals(AllCriteriaPredicate.class.getCanonicalName() + "{criteria=" + List.of(name, phone) + "}",
                 predicate.toString());
     }

@@ -142,11 +142,18 @@ public class FindPhoneCommandTest {
      * Commands compare their search mode and value, and reject null matching rules.
      */
     @Test
-    public void constructorAndEquals_distinguishSearchModes() {
+    public void equals_phoneSearchVariants_distinguishesSearchModes() {
         FindCommand command = new FindCommand(new PhoneStartsWithPredicate("9876"));
+        // EP: same phone prefix
         assertEquals(command, new FindCommand(new PhoneStartsWithPredicate("9876")));
+        // EP: different phone prefix
         assertFalse(command.equals(new FindCommand(new PhoneStartsWithPredicate("1234"))));
+        // EP: same text searched as a name
         assertFalse(command.equals(new FindCommand(new NameContainsKeywordsPredicate(List.of("9876")))));
+    }
+
+    @Test
+    public void constructor_nullPredicate_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new FindCommand(null));
     }
 

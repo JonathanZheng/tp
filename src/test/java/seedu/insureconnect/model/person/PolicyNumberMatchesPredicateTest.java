@@ -55,20 +55,36 @@ public class PolicyNumberMatchesPredicateTest {
     @Test
     public void test_partialPolicy_returnsFalse() {
         Person customer = new PersonBuilder().withTags("LIFE20001").build();
-        for (String query : new String[]{"LIFE", "20001", "LIFE200012"}) {
+        for (String query : new String[]{
+            // EP: only part of the policy number
+            "LIFE", "20001",
+            // EP: policy number with extra characters
+            "LIFE200012", // boundary value
+        }) {
             assertFalse(new PolicyNumberMatchesPredicate(query).test(customer));
         }
     }
 
     @Test
-    public void equals_ignoresCaseAndRejectsOtherValues() {
+    public void equals_variousObjects_ignoresCaseAndRejectsOtherValues() {
         PolicyNumberMatchesPredicate predicate = new PolicyNumberMatchesPredicate("LIFE20001");
+        // EP: same policy number in any case
         assertEquals(predicate, predicate);
         assertEquals(predicate, new PolicyNumberMatchesPredicate("life20001"));
+        // EP: different policy number
         assertFalse(predicate.equals(new PolicyNumberMatchesPredicate("AUTO1")));
+        // EP: null or another type
         assertFalse(predicate.equals(null));
         assertFalse(predicate.equals("LIFE20001"));
-        assertEquals("LIFE20001", predicate.toString());
+    }
+
+    @Test
+    public void toString_validPolicy_returnsPolicyNumber() {
+        assertEquals("LIFE20001", new PolicyNumberMatchesPredicate("LIFE20001").toString());
+    }
+
+    @Test
+    public void constructor_nullPolicy_throwsNullPointerException() {
         assertThrows(NullPointerException.class, () -> new PolicyNumberMatchesPredicate(null));
     }
 }

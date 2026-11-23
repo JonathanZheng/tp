@@ -43,9 +43,14 @@ public class FileUtilTest {
     }
 
     @Test
-    public void readMissingFileAndCreateUnderRegularFile_reportIoFailure() throws IOException {
-        Path file = temporaryFolder.resolve("file.txt");
+    public void readFromFile_missingFile_throwsIoException() {
+        Path file = temporaryFolder.resolve("missing.txt");
         assertThrows(IOException.class, () -> FileUtil.readFromFile(file));
+    }
+
+    @Test
+    public void createIfMissing_parentIsRegularFile_throwsIoExceptionAndPreservesFile() throws IOException {
+        Path file = temporaryFolder.resolve("file.txt");
         Files.writeString(file, "preserve me");
         assertThrows(IOException.class, () -> FileUtil.createIfMissing(file.resolve("child.txt")));
         assertEquals("preserve me", Files.readString(file));

@@ -3,7 +3,6 @@ package seedu.insureconnect.model.person;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.insureconnect.testutil.TypicalPersons.ALICE;
 
@@ -20,7 +19,7 @@ import seedu.insureconnect.testutil.PersonBuilder;
  */
 public class ValueEqualityTest {
     @Test
-    public void equalValues_workAsHashSetKeys() {
+    public void hashCode_equalValues_workAsHashSetKeys() {
         assertEquivalentKeys(new Name("Alice"), new Name("Alice"));
         assertEquivalentKeys(new Phone("91234567"), new Phone("91234567"));
         assertEquivalentKeys(new Email("alice@example.com"), new Email("alice@example.com"));
@@ -38,33 +37,40 @@ public class ValueEqualityTest {
     }
 
     @Test
-    public void tagEquality_ignoresCaseAndRequiresSameType() {
+    public void equals_tagVariants_ignoresCaseAndRequiresSameType() {
         Tag policy = new Tag("LIFE123");
 
+        // EP: same policy in any case
         assertEquals(policy, policy);
+        assertEquals(policy, new Tag("life123"));
+        // EP: null or another type
         assertFalse(policy.equals(null));
         assertFalse(policy.equals("LIFE123"));
-        assertEquals(policy, new Tag("life123"));
     }
 
     @Test
-    public void policyPredicateEquality_ignoresCaseAndRejectsOtherValues() {
+    public void equals_policyPredicateVariants_ignoresCaseAndRejectsOtherValues() {
         PolicyNumberMatchesPredicate predicate = new PolicyNumberMatchesPredicate("LIFE123");
+        // EP: same policy number in any case
         assertEquals(predicate, predicate);
         assertEquals(predicate, new PolicyNumberMatchesPredicate("life123"));
+        // EP: null, another type or a different policy number
         assertFalse(predicate.equals(null));
         assertFalse(predicate.equals("LIFE123"));
         assertNotEquals(predicate, new PolicyNumberMatchesPredicate("AUTO1"));
-        assertEquals("LIFE123", predicate.toString());
-        assertThrows(NullPointerException.class, () -> new PolicyNumberMatchesPredicate(null));
     }
 
     @Test
-    public void policyPredicate_partialNumber_doesNotMatch() {
+    public void test_partialOrDifferentCasePolicy_matchesOnlyWholeNumber() {
         Person customer = new PersonBuilder().withTags("LIFE123", "AUTO456").build();
-        for (String query : List.of("LIFE", "123", "LIFE1234")) {
+        for (String query : List.of(
+                // EP: only part of a policy number
+                "LIFE", "123",
+                // EP: policy number with extra characters
+                "LIFE1234")) { // boundary value
             assertFalse(new PolicyNumberMatchesPredicate(query).test(customer));
         }
+        // EP: whole policy number in a different case
         assertTrue(new PolicyNumberMatchesPredicate("auto456").test(customer));
     }
 
