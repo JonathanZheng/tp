@@ -47,6 +47,9 @@ public final class SampleDataUtil {
         };
     }
 
+    /**
+     * Returns an InsureConnect holding the sample customers from {@link #getSamplePersons()}.
+     */
     public static ReadOnlyInsureConnect getSampleInsureConnect() {
         InsureConnect sampleInsureConnect = new InsureConnect();
         for (Person samplePerson : getSamplePersons()) {

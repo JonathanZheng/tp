@@ -47,7 +47,6 @@ public class StorageManager implements Storage {
         userPrefsStorage.saveUserPrefs(userPrefs);
     }
 
-
     // ================ InsureConnect methods ==============================
 
     @Override

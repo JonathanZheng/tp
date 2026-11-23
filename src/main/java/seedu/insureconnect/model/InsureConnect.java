@@ -17,6 +17,9 @@ public class InsureConnect implements ReadOnlyInsureConnect {
 
     private final UniquePersonList persons = new UniquePersonList();
 
+    /**
+     * Creates an empty InsureConnect with no customers.
+     */
     public InsureConnect() {}
 
     /**

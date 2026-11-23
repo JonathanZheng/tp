@@ -26,10 +26,16 @@ public class JsonInsureConnectStorage {
     private final Set<Path> unreadableFilePaths = new HashSet<>();
     private final Path filePath;
 
+    /**
+     * Creates a storage that reads and writes the customer data file at {@code filePath}.
+     */
     public JsonInsureConnectStorage(Path filePath) {
         this.filePath = requireNonNull(filePath);
     }
 
+    /**
+     * Returns the path of the customer data file this storage uses by default.
+     */
     public Path getInsureConnectFilePath() {
         return filePath;
     }
