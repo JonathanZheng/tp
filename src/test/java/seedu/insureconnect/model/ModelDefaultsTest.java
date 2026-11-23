@@ -18,7 +18,7 @@ import seedu.insureconnect.model.person.Person;
  */
 public class ModelDefaultsTest {
     @Test
-    public void defaultFilter_includesEveryCustomerWithoutCallingAbstractMethods() {
+    public void getFilteredPersonListPredicate_defaultImplementation_showsEveryCustomer() {
         InvocationHandler defaultMethods = (proxy, method, arguments) -> {
             if (method.isDefault()) {
                 return InvocationHandler.invokeDefault(proxy, method, arguments);

@@ -81,11 +81,14 @@ public class PhoneStartsWithPredicateTest {
      * Equal predicates represent the same digit prefix and preserve leading zeros.
      */
     @Test
-    public void equals_comparesPrefixes() {
+    public void equals_variousObjects_comparesPrefixes() {
         PhoneStartsWithPredicate predicate = new PhoneStartsWithPredicate("0012");
+        // EP: same prefix
         assertTrue(predicate.equals(predicate));
         assertTrue(predicate.equals(new PhoneStartsWithPredicate("0012")));
+        // EP: different prefix, including the same digits without leading zeros
         assertFalse(predicate.equals(new PhoneStartsWithPredicate("12")));
+        // EP: null or another type
         assertFalse(predicate.equals(null));
         assertFalse(predicate.equals("0012"));
     }
@@ -94,7 +97,7 @@ public class PhoneStartsWithPredicateTest {
      * Diagnostic output includes the exact phone prefix.
      */
     @Test
-    public void toString_includesPrefix() {
+    public void toString_validPrefix_includesPrefix() {
         assertEquals(PhoneStartsWithPredicate.class.getCanonicalName() + "{prefix=0012}",
                 new PhoneStartsWithPredicate("0012").toString());
     }

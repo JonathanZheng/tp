@@ -128,7 +128,7 @@ public class MainAppTest extends GuiTest {
     }
 
     @Test
-    public void stop_savesLatestPreferencesForNextLaunch() throws Exception {
+    public void stop_changedPreferences_restoredOnNextLaunch() throws Exception {
         MainApp app = newApplication();
         app.init();
         GuiSettings settings = new GuiSettings(900, 650, 60, 70).withColourScheme(ColourScheme.LIGHT);

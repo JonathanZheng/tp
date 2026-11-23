@@ -19,7 +19,7 @@ import seedu.insureconnect.model.person.UniquePersonList;
  */
 public class ModelValueTest {
     @Test
-    public void preferences_copyIsIndependentAndPreservesValueEquality() {
+    public void constructor_copiedPreferences_independentAndEqual() {
         UserPrefs original = new UserPrefs();
         UserPrefs copy = new UserPrefs(original);
         assertEquals(original, original);
@@ -34,7 +34,7 @@ public class ModelValueTest {
     }
 
     @Test
-    public void addressBook_copyIsIndependentAndEqualityIncludesOrder() {
+    public void constructor_copiedInsureConnect_independentAndOrderSensitive() {
         InsureConnect original = new InsureConnect();
         original.setPersons(List.of(ALICE, BOB));
         InsureConnect copy = new InsureConnect(original);
@@ -49,7 +49,7 @@ public class ModelValueTest {
     }
 
     @Test
-    public void uniqueList_equalityHashingAndIterator_preserveOrder() {
+    public void setPersons_copiedList_equalAndIteratesInOrder() {
         UniquePersonList original = new UniquePersonList();
         original.setPersons(List.of(ALICE, BOB));
         UniquePersonList copy = new UniquePersonList();

@@ -21,7 +21,7 @@ import javafx.stage.Stage;
 public class HelpWindowTest extends GuiTest {
 
     @Test
-    public void showHideAndFocus_reusesHelpWindowWithGuideLink() throws Exception {
+    public void show_afterFocusAndHide_reusesWindowWithCommandFormats() throws Exception {
         runOnFxThread(() -> {
             Stage stage = new Stage();
             HelpWindow help = new HelpWindow(stage);
@@ -45,7 +45,7 @@ public class HelpWindowTest extends GuiTest {
     }
 
     @Test
-    public void commandFormats_includesCombinedFindSyntax() throws Exception {
+    public void constructor_defaultStage_listsCombinedFindSyntax() throws Exception {
         runOnFxThread(() -> {
             HelpWindow help = new HelpWindow();
             TextArea formats = (TextArea) help.getRoot().getScene().lookup("#commandFormats");
@@ -54,7 +54,7 @@ public class HelpWindowTest extends GuiTest {
     }
 
     @Test
-    public void copyButton_copiesUserGuideUrl() throws Exception {
+    public void copyUrl_buttonFired_copiesUserGuideUrl() throws Exception {
         runOnFxThread(() -> {
             Clipboard clipboard = Clipboard.getSystemClipboard();
             Map<DataFormat, Object> original = copyClipboardContents(clipboard);

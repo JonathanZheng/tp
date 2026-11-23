@@ -94,11 +94,14 @@ public class ListCommandTest {
         assertEquals(List.of(zoe, alice, bob), sortedModel.getFilteredPersonList());
     }
     @Test
-    public void equals_distinguishesSortOrdersAndOtherTypes() {
+    public void equals_variousObjects_distinguishesSortOrders() {
         ListCommand command = new ListCommand();
+        // EP: same sort order
         assertEquals(command, command);
         assertEquals(command, new ListCommand());
+        // EP: different sort order
         assertNotEquals(command, new ListCommand(NAME));
+        // EP: null or another type
         assertFalse(command.equals(null));
         assertFalse(command.equals("list"));
     }

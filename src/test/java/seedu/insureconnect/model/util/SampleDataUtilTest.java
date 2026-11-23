@@ -25,7 +25,7 @@ public class SampleDataUtilTest {
     public Path temporaryFolder;
 
     @Test
-    public void sampleData_hasUniquePoliciesAndRoundTripsThroughStorage() throws Exception {
+    public void getSampleInsureConnect_savedAndReloaded_hasUniquePoliciesAndRoundTrips() throws Exception {
         ReadOnlyInsureConnect sample = SampleDataUtil.getSampleInsureConnect();
         assertEquals(6, sample.getPersonList().size());
         Set<Tag> policies = new HashSet<>();
@@ -42,10 +42,14 @@ public class SampleDataUtilTest {
     }
 
     @Test
-    public void getTagSet_deduplicatesAndValidatesValues() {
-        assertEquals(Set.of(), SampleDataUtil.getTagSet());
+    public void getTagSet_variousInputs_deduplicatesAndValidates() {
+        // EP: no policies
+        assertEquals(Set.of(), SampleDataUtil.getTagSet()); // boundary value
+        // EP: repeated valid policy
         assertEquals(Set.of(new Tag("LIFE1")), SampleDataUtil.getTagSet("LIFE1", "LIFE1"));
+        // EP: invalid policy number
         assertThrows(IllegalArgumentException.class, () -> SampleDataUtil.getTagSet("LIFE_1"));
+        // EP: null policy
         assertThrows(NullPointerException.class, () -> SampleDataUtil.getTagSet((String) null));
     }
 }

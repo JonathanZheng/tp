@@ -14,7 +14,7 @@ import seedu.insureconnect.commons.util.JsonUtil;
 
 public class GuiSettingsTest {
     @Test
-    public void withColourScheme_preservesWindowSettings() {
+    public void withColourScheme_customWindow_preservesWindowSettings() {
         GuiSettings original = new GuiSettings(800, 700, 40, 50);
         GuiSettings updated = original.withColourScheme(ColourScheme.LIGHT);
         assertEquals(original.getWindowWidth(), updated.getWindowWidth());
@@ -47,18 +47,21 @@ public class GuiSettingsTest {
         assertEquals(expected, guiSettings.toString());
     }
     @Test
-    public void equals_comparesEveryWindowProperty() {
+    public void equals_variousObjects_comparesEveryWindowProperty() {
         GuiSettings settings = new GuiSettings(800, 700, 40, 50);
+        // EP: same object
         assertEquals(settings, settings);
+        // EP: null or another type
         assertFalse(settings.equals(null));
         assertFalse(settings.equals("settings"));
+        // EP: one window property differs
         assertNotEquals(settings, new GuiSettings(900, 700, 40, 50));
         assertNotEquals(settings, new GuiSettings(800, 800, 40, 50));
         assertNotEquals(settings, new GuiSettings(800, 700, 41, 50));
     }
 
     @Test
-    public void windowCoordinates_returnDefensiveCopies() {
+    public void getWindowCoordinates_resultMutated_settingsUnchanged() {
         GuiSettings settings = new GuiSettings(800, 700, 40, 50);
         Point position = settings.getWindowCoordinates();
         position.translate(100, 100);

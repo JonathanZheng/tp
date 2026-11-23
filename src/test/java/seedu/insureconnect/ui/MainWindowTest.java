@@ -270,7 +270,7 @@ public class MainWindowTest extends GuiTest {
     }
 
     @Test
-    public void closeRequest_savesWindowPositionAndHidesStage() throws Exception {
+    public void closeRequest_windowShowing_savesPositionAndHidesStage() throws Exception {
         runOnFxThread(() -> {
             UiLogicStub logic = new UiLogicStub();
             MainWindow window = createWindow(logic);
@@ -303,7 +303,7 @@ public class MainWindowTest extends GuiTest {
     }
 
     @Test
-    public void helpMenuAndFunctionKey_openSameHelpWindow() throws Exception {
+    public void handleHelp_menuThenF1_reusesSameHelpWindow() throws Exception {
         runOnFxThread(() -> {
             MainWindow window = createWindow(new UiLogicStub());
             MenuBar menus = (MenuBar) window.getRoot().getScene().lookup("#menuBar");

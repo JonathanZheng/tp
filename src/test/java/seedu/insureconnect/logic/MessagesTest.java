@@ -25,21 +25,26 @@ public class MessagesTest {
                 .contains("; Remark: Prefers WhatsApp after 6pm"));
     }
     @Test
-    public void missingFieldsAndPreamble_formatsEachCombination() {
+    public void getErrorMessageForMissingFieldsAndPreamble_fieldsOrPreambleProblems_listsEachProblem() {
+        // EP: one missing field, no preamble
         assertEquals("Invalid command format!\nMissing required field: name.\nusage",
                 Messages.getErrorMessageForMissingFieldsAndPreamble(List.of("name"), "", "usage"));
+        // EP: several missing fields and a preamble
         assertEquals("Invalid command format!\nMissing required fields: name, phone. "
                 + "Unexpected text before the first field: \"extra\".\nusage",
                 Messages.getErrorMessageForMissingFieldsAndPreamble(List.of("name", "phone"), "extra", "usage"));
+        // EP: preamble only, no missing fields
         assertEquals("Invalid command format!\nUnexpected text before the first field: \"extra\".\nusage",
                 Messages.getErrorMessageForMissingFieldsAndPreamble(List.of(), "extra", "usage"));
     }
 
     @Test
-    public void duplicatePrefixes_deduplicatesAndRequiresAtLeastOneField() {
+    public void getErrorMessageForDuplicatePrefixes_repeatedOrNoPrefixes_deduplicatesOrRejects() {
+        // EP: the same prefix repeated
         assertEquals(Messages.MESSAGE_DUPLICATE_FIELDS + "p/",
                 Messages.getErrorMessageForDuplicatePrefixes(new Prefix("p/"), new Prefix("p/")));
-        assertThrows(AssertionError.class, Messages::getErrorMessageForDuplicatePrefixes);
+        // EP: no prefixes, a programmer error
+        assertThrows(AssertionError.class, Messages::getErrorMessageForDuplicatePrefixes); // boundary value
     }
 
     @Test
