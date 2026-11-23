@@ -28,28 +28,16 @@ import seedu.insureconnect.commons.core.ColourScheme;
  */
 public class MainWindowInteractionTest extends GuiTest {
     @Test
-    public void colourSchemeMenu_updatesBothWindowsAndPersistsSelection() throws Exception {
+    public void colourSchemeMenu_toggleAndRadioItems_updatesBothWindowsAndPersists() throws Exception {
         runOnFxThread(() -> {
             UiLogicStub logic = new UiLogicStub();
             MainWindow window = createWindow(logic);
             window.handleHelp();
-            Stage help = Window.getWindows().stream().filter(Stage.class::isInstance)
-                    .map(Stage.class::cast).filter(stage -> "Help".equals(stage.getTitle()))
-                    .findFirst().orElseThrow();
-            MenuBar menus = (MenuBar) window.getRoot().getScene().lookup("#menuBar");
-            Menu view = menus.getMenus().stream().filter(menu -> "View".equals(menu.getText()))
-                    .findFirst().orElseThrow();
-            MenuItem toggle = view.getItems().stream()
-                    .filter(item -> "Toggle colour scheme".equals(item.getText()))
-                    .findFirst()
-                    .orElseThrow();
-            toggle.fire();
+            Stage help = findHelpStage();
+            Menu view = findViewMenu(window);
+            findToggleItem(view).fire();
             assertScheme(window.getRoot(), help, logic, ColourScheme.LIGHT);
-            Menu schemes = view.getItems().stream()
-                    .filter(Menu.class::isInstance)
-                    .map(Menu.class::cast)
-                    .findFirst()
-                    .orElseThrow();
+            Menu schemes = findSchemeMenu(view);
             RadioMenuItem dark = (RadioMenuItem) schemes.getItems().get(0);
             RadioMenuItem light = (RadioMenuItem) schemes.getItems().get(1);
             light.fire();
@@ -64,7 +52,7 @@ public class MainWindowInteractionTest extends GuiTest {
     }
 
     @Test
-    public void customerSelection_updatesDetailsAndClearsRemovedCustomer() throws Exception {
+    public void customerSelection_selectAndRemove_updatesDetailsPanel() throws Exception {
         runOnFxThread(() -> {
             UiLogicStub logic = new UiLogicStub();
             logic.getFilteredPersonList().addAll(ALICE, BENSON);
@@ -109,6 +97,41 @@ public class MainWindowInteractionTest extends GuiTest {
                     logic,
                     ColourScheme.DARK);
         });
+    }
+
+    /**
+     * Returns the open help window.
+     */
+    private Stage findHelpStage() {
+        return Window.getWindows().stream().filter(Stage.class::isInstance)
+                .map(Stage.class::cast).filter(stage -> "Help".equals(stage.getTitle()))
+                .findFirst().orElseThrow();
+    }
+
+    /**
+     * Returns the View menu from the main window's menu bar.
+     */
+    private Menu findViewMenu(MainWindow window) {
+        MenuBar menus = (MenuBar) window.getRoot().getScene().lookup("#menuBar");
+        return menus.getMenus().stream().filter(menu -> "View".equals(menu.getText()))
+                .findFirst().orElseThrow();
+    }
+
+    /**
+     * Returns the menu item that toggles between the colour schemes.
+     */
+    private MenuItem findToggleItem(Menu view) {
+        return view.getItems().stream()
+                .filter(item -> "Toggle colour scheme".equals(item.getText()))
+                .findFirst().orElseThrow();
+    }
+
+    /**
+     * Returns the submenu that holds one radio item per colour scheme.
+     */
+    private Menu findSchemeMenu(Menu view) {
+        return view.getItems().stream().filter(Menu.class::isInstance)
+                .map(Menu.class::cast).findFirst().orElseThrow();
     }
 
     /**
