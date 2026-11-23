@@ -233,10 +233,10 @@ public class CommandBox extends UiPart<Region> {
             return "";
         }
         return COMMAND_WORDS.stream()
-            .filter(word -> word.length() > text.length() && word.startsWith(text))
-            .findFirst()
-            .map(word -> word.substring(text.length()))
-            .orElse("");
+                .filter(word -> word.length() > text.length() && word.startsWith(text))
+                .findFirst()
+                .map(word -> word.substring(text.length()))
+                .orElse("");
     }
 
     /**
