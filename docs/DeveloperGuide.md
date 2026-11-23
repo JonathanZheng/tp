@@ -188,7 +188,7 @@ This section describes some noteworthy details on how certain features are imple
 
 ## **Documentation, logging, testing, dev-ops**
 
-* [Documentation guide](Documentation.md) — after changing the User Guide or its screenshots, run `python3 tools/generate_offline_guide.py` and commit the updated files in `docs/offline/`.
+* [Documentation guide](Documentation.md) — after changing the User Guide or its screenshots, run `python3 tools/generate_offline_guide.py` and commit the updated `src/main/resources/docs/UserGuide.html` and `docs/offline/sources.sha256`.
 * [Testing guide](Testing.md)
 * [Logging guide](Logging.md)
 * [DevOps guide](DevOps.md)

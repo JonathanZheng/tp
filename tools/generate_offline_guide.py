@@ -13,14 +13,14 @@ DOCS = ROOT / "docs"
 source = (DOCS / "UserGuide.md").read_text(encoding="utf-8")
 body = re.sub(r"\A---\n.*?\n---\n", "", source, flags=re.S)
 body = body.replace("* Table of Contents\n{:toc}", "[TOC]")
-inputs = {"UserGuide.md"}
+inputs = {"docs/UserGuide.md"}
 
 
 def embed_image(match):
     """Embed a local screenshot so the guide has no network dependencies."""
     alt, relative = match.groups()
     path = DOCS / relative
-    inputs.add(relative)
+    inputs.add(f"docs/{relative}")
     mime = mimetypes.guess_type(path)[0]
     encoded = base64.b64encode(path.read_bytes()).decode("ascii")
     return f"![{alt}](data:{mime};base64,{encoded})"
@@ -65,11 +65,13 @@ pre { overflow-x: auto; padding: 12px; background: #edf1f5; }
 <p class="notice">This complete guide is bundled with InsureConnect and works offline.
 External links, such as downloads and Java installation instructions, require internet access.</p>
 """ + rendered + "\n</body>\n</html>\n"
-output = DOCS / "offline"
-output.mkdir(exist_ok=True)
-(output / "UserGuide.html").write_bytes(page.encode("utf-8"))
-inputs.add("offline/UserGuide.html")
-manifest = "".join(f"{hashlib.sha256((DOCS / name).read_bytes()).hexdigest()}  {name}\n"
+# The guide lives in the main resources so that every build tool and IDE bundles it.
+guide = "src/main/resources/docs/UserGuide.html"
+(ROOT / guide).parent.mkdir(parents=True, exist_ok=True)
+(ROOT / guide).write_bytes(page.encode("utf-8"))
+inputs.add(guide)
+manifest = "".join(f"{hashlib.sha256((ROOT / name).read_bytes()).hexdigest()}  {name}\n"
                    for name in sorted(inputs))
-(output / "sources.sha256").write_bytes(manifest.encode("utf-8"))
-print("Generated docs/offline/UserGuide.html with embedded screenshots.")
+(DOCS / "offline").mkdir(exist_ok=True)
+(DOCS / "offline" / "sources.sha256").write_bytes(manifest.encode("utf-8"))
+print(f"Generated {guide} with embedded screenshots.")

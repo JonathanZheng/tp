@@ -36,7 +36,8 @@ title: Documentation guide
   python3 -m pip install Markdown==3.7
   python3 tools/generate_offline_guide.py
   ```
-* Commit both files in `docs/offline/` with the source documentation changes.
+* Commit `src/main/resources/docs/UserGuide.html` and `docs/offline/sources.sha256`
+  with the source documentation changes.
   `./gradlew checkOfflineGuide` verifies their source checksums, and both
   `check` and resource packaging run this check to prevent stale release guides.
 * The generator embeds screenshots and styles. Only external links need a network.
