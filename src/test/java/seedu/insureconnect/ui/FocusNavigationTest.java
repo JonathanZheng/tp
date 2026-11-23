@@ -53,7 +53,14 @@ public class FocusNavigationTest {
 
     @Test
     public void handleKeyPressed_ordinaryKeys_doesNotIntercept() {
-        KeyCode[] ordinaryKeys = {KeyCode.A, KeyCode.ENTER, KeyCode.TAB, KeyCode.UP, KeyCode.DOWN, KeyCode.F1};
+        KeyCode[] ordinaryKeys = {
+            // EP: keys that edit or submit text
+            KeyCode.A, KeyCode.ENTER,
+            // EP: keys that move within a control
+            KeyCode.TAB, KeyCode.UP, KeyCode.DOWN,
+            // EP: function keys other than F6
+            KeyCode.F1,
+        };
         for (KeyCode code : ordinaryKeys) {
             assertIgnored(new KeyEvent(commandInput, commandInput, KeyEvent.KEY_PRESSED, "", "", code,
                     false, false, false, false));

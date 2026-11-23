@@ -108,8 +108,10 @@ public class NameContainsKeywordsPredicateTest {
     @Test
     public void test_infixSuffixAndLongerKeywords_returnsFalse() {
         Person person = new PersonBuilder().withName("Alice Bob").build();
+        // EP: keyword inside or at the end of a name word
         assertFalse(new NameContainsKeywordsPredicate(List.of("lic", "ice", "ob")).test(person));
-        assertFalse(new NameContainsKeywordsPredicate(List.of("Alicee", "Bobby")).test(person));
+        // EP: keyword longer than every name word it starts with
+        assertFalse(new NameContainsKeywordsPredicate(List.of("Alicee", "Bobby")).test(person)); // boundary value
     }
 
     /**

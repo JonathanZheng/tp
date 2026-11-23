@@ -27,8 +27,11 @@ public class CombinedFindCommandParserTest {
         FindCommand expected = new FindCommand(new AllCriteriaPredicate(List.of(
                 new NameContainsKeywordsPredicate(List.of("Alice", "Bob")),
                 new PhoneStartsWithPredicate("912"), new PolicyNumberMatchesPredicate("LIFE"))));
-        for (String query : List.of("n/Alice Bob p/912 t/LIFE", "t/LIFE p/912 n/Alice Bob",
-                "p/912 n/Alice Bob t/LIFE", " \n n/ Alice\tBob\tp/912\nt/LIFE  ")) {
+        for (String query : List.of(
+                // EP: criteria in any order, single spaces
+                "n/Alice Bob p/912 t/LIFE", "t/LIFE p/912 n/Alice Bob", "p/912 n/Alice Bob t/LIFE",
+                // EP: mixed and repeated whitespace
+                " \n n/ Alice\tBob\tp/912\nt/LIFE  ")) {
             assertParseSuccess(parser, query, expected);
         }
     }
@@ -92,9 +95,11 @@ public class CombinedFindCommandParserTest {
         for (Prefix prefix : List.of(CliSyntax.PREFIX_NAME, CliSyntax.PREFIX_PHONE, CliSyntax.PREFIX_TAG)) {
             String marker = prefix.getPrefix();
             String message = Messages.getErrorMessageForDuplicatePrefixes(prefix);
+            // EP: both repeated criteria have values
             assertParseFailure(parser, marker + "123 " + marker + "456", message);
-            assertParseFailure(parser, marker + " " + marker + "123", message);
-            assertParseFailure(parser, marker + "123 " + marker, message);
+            // EP: one repeated criterion is empty
+            assertParseFailure(parser, marker + " " + marker + "123", message); // boundary value
+            assertParseFailure(parser, marker + "123 " + marker, message); // boundary value
         }
     }
 
